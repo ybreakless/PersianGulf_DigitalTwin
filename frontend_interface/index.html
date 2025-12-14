@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioTwin: Pro System</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <script type="importmap">
+        { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }
+    </script>
+</head>
+<body>
+    <div id="ui-layer">
+        <header onclick="window.resetToHome()">
+            <div class="brand">
+                <h1>BioTwin <span>PRO</span></h1>
+                <div class="subtitle">ADVANCED BIO-SIMULATION</div>
+            </div>
+            
+            <div class="header-right">
+                <button id="theme-toggle" onclick="window.toggleTheme()" title="Switch Light/Dark Mode">☀ / ☾</button>
+                <div class="system-status"><span class="dot"></span> ONLINE</div>
+            </div>
+        </header>
+
+        <div id="start-overlay">
+            <h2>VIRTUAL PATIENT</h2>
+            <p>SELECT A SYSTEM TO BEGIN ANALYSIS</p>
+        </div>
+
+        <nav id="system-nav"></nav>
+
+        <aside id="control-panel">
+            <h2 id="active-organ-title">TARGET SYSTEM</h2>
+            
+            <div class="panel-content">
+                <div class="monitor-wrapper">
+                    <div class="monitor-label">LIVE BIO-SIGNALS</div>
+                    <canvas id="ecg-canvas" width="250" height="80"></canvas>
+                </div>
+
+                <div class="sim-selector">
+                    <label>ANALYSIS PROTOCOL:</label>
+                    <select id="sim-mode">
+                        <option value="PATHOGEN">Viral Pathogen Scan</option>
+                        <option value="STRUCTURAL">Structural Integrity</option>
+                        <option value="NEURAL">Neural Activity</option>
+                    </select>
+                </div>
+
+                <div class="data-row"><span class="label">DIAGNOSIS</span><span class="value" id="disp-status">STANDBY</span></div>
+                <hr>
+                <div class="data-row"><span class="label">INTEGRITY</span><span class="value" id="val-health">--</span></div>
+                <div class="bar-container"><div id="bar-health" class="bar-fill" style="width: 0%"></div></div>
+                
+                <button id="btn-simulate" onclick="window.triggerSimulation()">INITIATE PROTOCOL</button>
+                <button class="secondary" onclick="window.resetToHome()">RESET VIEW</button>
+            </div>
+        </aside>
+
+        <div id="organ-dock"></div>
+
+        <footer id="log-console">
+            SYSTEM LOGS: Engine Ready. Waiting for input.
+        </footer>
+    </div>
+    <canvas id="bio-canvas"></canvas>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+/* --- THEME VARIABLES --- */
+:root {
+    --bg-color: #020202;
+    --text-color: #ffffff;
+    --accent-color: #00d2ff;
+    --accent-glow: rgba(0, 210, 255, 0.4);
+    --panel-bg: rgba(5, 12, 18, 0.9);
+    --border-color: rgba(0, 210, 255, 0.3);
+    --bubble-bg: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.4));
+    --status-ok: #00ff41;
+    --status-bad: #ff0000;
+}
+
+[data-theme="light"] {
+    --bg-color: #e0e5ec;
+    --text-color: #1a1a1a;
+    --accent-color: #0066cc;
+    --accent-glow: rgba(0, 102, 204, 0.3);
+    --panel-bg: rgba(255, 255, 255, 0.9);
+    --border-color: rgba(0, 0, 0, 0.1);
+    --bubble-bg: radial-gradient(circle at 30% 30%, #ffffff, #d1d9e6);
+    --status-ok: #009933;
+    --status-bad: #cc0000;
+}
+
+/* BASE FONTS */
+body { 
+    margin: 0; overflow: hidden; background: var(--bg-color); 
+    font-family: 'Rajdhani', sans-serif; 
+    color: var(--text-color); 
+    transition: background 0.5s ease;
+}
+h1, h2, button, .sys-bubble, .organ-pill {
+    font-family: 'Orbitron', sans-serif; 
+}
+
+#bio-canvas { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; }
+#ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; }
+
+/* HEADER */
+header { 
+    display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; 
+    background: linear-gradient(to bottom, var(--panel-bg), transparent); 
+    pointer-events: auto; cursor: pointer; z-index: 20;
+}
+h1 { margin: 0; font-weight: 400; font-size: 26px; letter-spacing: 3px; color: var(--text-color); }
+h1 span { font-weight: 900; color: var(--accent-color); }
+.subtitle { font-family: 'Rajdhani', sans-serif; font-size: 12px; color: #888; letter-spacing: 6px; margin-top: 5px;}
+
+.header-right { display: flex; gap: 20px; align-items: center; }
+.system-status { font-size: 12px; font-weight: bold; color: var(--status-ok); display: flex; align-items: center; }
+.dot { width: 8px; height: 8px; background: var(--status-ok); border-radius: 50%; margin-right: 5px; box-shadow: 0 0 10px var(--status-ok); }
+
+#theme-toggle {
+    background: transparent; border: 1px solid var(--border-color); color: var(--text-color);
+    width: auto; padding: 5px 12px; font-size: 14px; margin: 0;
+}
+
+/* SYSTEM NAV (Bubbles) */
+#system-nav {
+    position: absolute; left: 50px; top: 18%; bottom: 10%; width: 90px;
+    display: flex; flex-direction: column; gap: 25px; 
+    overflow-y: auto; pointer-events: auto; padding: 10px;
+    scrollbar-width: none;
+    transform: translateX(-150px); transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+#system-nav.visible { transform: translateX(0); }
+
+.sys-bubble {
+    min-height: 75px; width: 75px; border-radius: 50%; 
+    background: var(--bubble-bg);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; 
+    font-size: 9px; font-weight: 700; color: var(--text-color); 
+    text-align: center; letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+.sys-bubble:hover { transform: scale(1.15); border-color: var(--accent-color); color: var(--accent-color); }
+.sys-bubble.active { background: var(--accent-color); color: var(--bg-color); border-color: var(--accent-color); transform: scale(1.1); }
+
+/* CONTROL PANEL */
+#control-panel { 
+    position: absolute; top: 100px; right: 50px; width: 300px; 
+    background: var(--panel-bg); backdrop-filter: blur(15px); 
+    border: 1px solid var(--border-color); padding: 25px; border-radius: 12px; 
+    pointer-events: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    transform: translateX(450px); transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+#control-panel.visible { transform: translateX(0); }
+
+/* PRO CONTROLS */
+.sim-selector { margin-bottom: 15px; }
+.sim-selector label { display: block; font-size: 10px; color: #888; margin-bottom: 5px; letter-spacing: 1px; }
+select { 
+    width: 100%; padding: 8px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); 
+    color: var(--text-color); font-family: 'Rajdhani', sans-serif; font-weight: bold; outline: none;
+}
+[data-theme="light"] select { background: rgba(255,255,255,0.5); }
+
+/* MONITOR */
+.monitor-wrapper { margin-bottom: 20px; border: 1px solid var(--border-color); background: #000; border-radius: 4px; position: relative; }
+.monitor-label { position: absolute; top: 2px; left: 5px; font-size: 8px; color: #555; }
+#ecg-canvas { width: 100%; height: 80px; display: block; }
+
+/* UTILS */
+h2 { color: var(--accent-color); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-top: 0; font-size: 16px; letter-spacing: 2px; }
+.data-row { display: flex; justify-content: space-between; margin: 15px 0; font-size: 14px; }
+.value { font-family: 'Rajdhani', monospace; font-weight: 700; font-size: 16px; color: var(--text-color); }
+.bar-container { width: 100%; height: 8px; background: rgba(0,0,0,0.3); margin-bottom: 20px; border-radius: 4px; overflow: hidden; border: 1px solid var(--border-color); }
+.bar-fill { height: 100%; background: var(--accent-color); width: 0%; transition: width 0.6s; }
+
+button { width: 100%; padding: 14px; background: var(--accent-color); border: none; color: var(--bg-color); font-weight: 800; cursor: pointer; border-radius: 4px; margin-bottom: 10px; letter-spacing: 1px; }
+button:hover { filter: brightness(1.2); }
+button.secondary { background: transparent; border: 1px solid #666; color: #888; }
+button.secondary:hover { border-color: var(--text-color); color: var(--text-color); }
+
+/* DOCK */
+#organ-dock {
+    position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%) translateY(100px);
+    display: flex; gap: 10px; padding: 15px 30px;
+    background: var(--panel-bg); border: 1px solid var(--border-color);
+    border-radius: 50px; backdrop-filter: blur(20px);
+    pointer-events: auto; opacity: 0; transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+#organ-dock.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+.organ-pill {
+    padding: 8px 20px; border-radius: 30px; background: rgba(125,125,125,0.1);
+    border: 1px solid transparent; color: var(--text-color); font-size: 11px; cursor: pointer; transition: all 0.2s; white-space: nowrap;
+}
+.organ-pill:hover { background: rgba(125,125,125,0.3); }
+.organ-pill.active { background: var(--accent-color); color: var(--bg-color); font-weight: 900; }
+
+#start-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: none; transition: opacity 0.5s; }
+#start-overlay.hidden { opacity: 0; }
+#start-overlay h2 { color: var(--text-color); text-shadow: none; font-size: 40px; }
+#start-overlay p { color: var(--accent-color); }
