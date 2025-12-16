@@ -17,7 +17,6 @@
 <body>
 
     <div id="auth-layer">
-        
         <div class="bg-noise"></div>
         <div class="bg-gradient-orb"></div>
         <div class="grid-overlay"></div>
@@ -38,7 +37,7 @@
                     <div id="login-view" class="view-section">
                         <div class="input-group">
                             <label><i class="fas fa-id-badge"></i> OPERATOR ID</label>
-                            <input type="text" id="login-id" placeholder="Enter Y-314 Identification" autocomplete="off">
+                            <input type="text" id="login-id" placeholder="Enter Y-314 ID" autocomplete="off">
                         </div>
                         <div class="input-group">
                             <label><i class="fas fa-key"></i> PASSCODE</label>
@@ -53,7 +52,6 @@
                         <div class="auth-actions">
                             <button id="btn-login" class="neon-btn primary">
                                 <span class="btn-content">INITIALIZE SESSION</span>
-                                <div class="btn-glare"></div>
                             </button>
                         </div>
                         
@@ -66,11 +64,12 @@
                         <div class="scroll-wrapper custom-scrollbar">
                             
                             <div class="form-block">
-                                <h4>00 // SECURITY CREDENTIALS</h4>
-                                <div class="grid-2">
-                                    <input type="text" id="reg-id" placeholder="Assign ID *" class="cyber-input">
+                                <h4>00 // IDENTITY & CREDENTIALS</h4>
+                                <div class="input-stack">
+                                    <input type="text" id="reg-name" placeholder="Full Legal Name" class="cyber-input">
+                                    <input type="text" id="reg-id" placeholder="Assign Operator ID" class="cyber-input">
                                     <div class="password-wrapper">
-                                        <input type="password" id="reg-pass" placeholder="Set Password *" class="cyber-input">
+                                        <input type="password" id="reg-pass" placeholder="Set Password" class="cyber-input">
                                         <button class="toggle-pass" onclick="togglePass('reg-pass', this)">
                                             <i class="fa-solid fa-eye"></i>
                                         </button>
@@ -79,9 +78,7 @@
                             </div>
 
                             <div class="form-block">
-                                <h4>01 // CORE BIOMETRICS</h4>
-                                
-                                <label class="sub-label">BIOLOGICAL PROFILE</label>
+                                <h4>01 // BIOLOGICAL PROFILE</h4>
                                 <div class="gender-selector-container">
                                     <button class="gender-select-btn male" id="reg-male-btn" onclick="selectRegGender('male')">
                                         <i class="fas fa-mars"></i> MALE
@@ -102,26 +99,19 @@
                                         <span class="unit">kg</span>
                                     </div>
                                     <div class="input-wrap">
-                                        <input type="number" id="reg-fat" placeholder="Body Fat" class="cyber-input">
+                                        <input type="number" id="reg-fat" placeholder="Fat %" class="cyber-input">
                                         <span class="unit">%</span>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="form-block">
-                                <h4>02 // CARDIOVASCULAR METRICS</h4>
+                                <h4>02 // CARDIOVASCULAR</h4>
                                 <div class="grid-2">
-                                    <div class="input-wrap">
-                                        <input type="number" id="reg-hr" placeholder="Resting HR" class="cyber-input">
-                                        <span class="unit">BPM</span>
-                                    </div>
-                                    <div class="input-wrap">
-                                        <input type="number" id="reg-spo2" placeholder="SpO2 Level" class="cyber-input">
-                                        <span class="unit">%</span>
-                                    </div>
-                                    <input type="text" id="reg-bp" placeholder="BP (e.g. 120/80)" class="cyber-input">
+                                    <div class="input-wrap"><input type="number" id="reg-hr" placeholder="Resting HR" class="cyber-input"><span class="unit">BPM</span></div>
+                                    <div class="input-wrap"><input type="number" id="reg-spo2" placeholder="SpO2 Level" class="cyber-input"><span class="unit">%</span></div>
+                                    <input type="text" id="reg-bp" placeholder="BP (120/80)" class="cyber-input">
                                     <select id="reg-ecg" class="cyber-input">
-                                        <option value="" disabled selected>ECG Status</option>
                                         <option value="Normal">Normal Sinus Rhythm</option>
                                         <option value="Arrhythmia">Arrhythmia Detected</option>
                                         <option value="Unknown">Not Measured</option>
@@ -130,34 +120,16 @@
                             </div>
 
                             <div class="form-block">
-                                <h4>03 // RESPIRATORY SYSTEM</h4>
-                                <div class="grid-3">
-                                    <input type="number" id="reg-fvc" placeholder="FVC (L)" class="cyber-input">
-                                    <input type="number" id="reg-pef" placeholder="PEF (L/m)" class="cyber-input">
-                                    <input type="number" id="reg-rr" placeholder="RR (b/m)" class="cyber-input">
-                                </div>
-                            </div>
-
-                            <div class="form-block">
-                                <h4>04 // METABOLIC & CHEMICAL</h4>
-                                <div class="grid-3">
-                                    <input type="number" id="reg-temp" placeholder="Temp (°C)" class="cyber-input">
-                                    <input type="number" id="reg-glucose" placeholder="Glucose" class="cyber-input">
-                                    <input type="number" id="reg-hydration" placeholder="Hydration" class="cyber-input">
-                                </div>
-                            </div>
-
-                            <div class="form-block">
                                 <h4>05 // DATA IMPORT</h4>
                                 <div class="upload-area">
                                     <div class="file-box">
                                         <i class="fas fa-camera"></i>
-                                        <label>Patient Photo</label>
+                                        <label>Photo</label>
                                         <input type="file" id="upload-photo" accept="image/*">
                                     </div>
                                     <div class="file-box">
                                         <i class="fas fa-file-csv"></i>
-                                        <label>Medical .CSV</label>
+                                        <label>.CSV</label>
                                         <input type="file" id="upload-csv" accept=".csv">
                                     </div>
                                 </div>
@@ -182,24 +154,16 @@
                     <div class="divider-line"></div>
                     <p class="description">
                         Welcome to the <strong>Y-314 BioTwin Initiative</strong>. 
-                        This platform utilizes high-fidelity 3D rendering and real-time Python data integration 
-                        to create accurate digital twins for medical diagnosis, simulation, and predictive analysis.
+                        This platform utilizes high-fidelity 3D rendering and real-time Python data integration.
                     </p>
-                    <ul class="feature-list">
-                        <li><i class="fas fa-microchip"></i> Real-time Python Core</li>
-                        <li><i class="fas fa-cube"></i> High-Fidelity 3D Assets</li>
-                        <li><i class="fas fa-lock"></i> Encrypted Patient Database</li>
-                    </ul>
                 </div>
             </div>
-
         </div>
     </div>
 
     <div id="app-layer" class="hidden">
         
         <div id="canvas-container"></div>
-
         <div id="loader">
             <div class="spinner"></div>
             <p>LOADING ASSETS...</p>
@@ -207,7 +171,7 @@
 
         <div class="floating-hud">
             <div class="hud-left">
-                <span class="hud-brand">BIOTWIN <span style="font-weight:300; opacity:0.6;">OS</span></span>
+                <span class="hud-brand">Y-314 OS</span>
             </div>
             
             <div class="hud-center">
@@ -282,12 +246,12 @@
             <h2 id="sub-menu-title">System Name</h2>
 
             <div class="sub-grid" id="sub-menu-content">
-            </div>
+                </div>
         </div>
 
         <div class="info-panel ios-card">
             <div class="panel-header-small">
-                <h3><i class="fas fa-chart-pie"></i> LIVE ANALYSIS</h3>
+                <h3>LIVE ANALYSIS</h3>
             </div>
             <div class="panel-body">
                 <div class="data-row">
@@ -297,36 +261,21 @@
                 <div class="desc-box">
                     <p id="info-desc">Initializing full systemic scan. Waiting for input...</p>
                 </div>
-                
-                <div id="sim-status-area" class="hidden">
-                     <div class="sim-progress-bar">
-                         <div class="bar-fill"></div>
-                     </div>
-                     <span class="sim-text">Processing...</span>
-                </div>
             </div>
         </div>
 
         <div class="bottom-dock ios-card">
             <div class="gender-toggle">
-                <button id="btn-male" class="gender-btn active" title="Load Male Model">
-                    <i class="fa-solid fa-mars"></i>
-                </button>
-                <button id="btn-female" class="gender-btn" title="Load Female Model">
-                    <i class="fa-solid fa-venus"></i>
-                </button>
+                <button id="btn-male" class="gender-btn active" title="Load Male Model"><i class="fa-solid fa-mars"></i></button>
+                <button id="btn-female" class="gender-btn" title="Load Female Model"><i class="fa-solid fa-venus"></i></button>
             </div>
-            
             <div class="divider-vert"></div>
-            
             <div class="control-unit wide">
                 <i class="fa-solid fa-minus small-icon"></i>
                 <input type="range" id="range-zoom" min="10" max="100" value="50">
                 <i class="fa-solid fa-plus small-icon"></i>
             </div>
-
             <div class="divider-vert"></div>
-
             <button class="icon-btn-dock" onclick="resetCam()">
                 <i class="fas fa-compress-arrows-alt"></i>
             </button>
@@ -343,20 +292,6 @@
                         <span>High Quality Rendering</span>
                         <input type="checkbox" checked>
                     </div>
-                    <div class="setting-row">
-                        <span>Python Debug Mode</span>
-                        <input type="checkbox">
-                    </div>
-                    <div class="setting-row">
-                        <span>Animation Speed</span>
-                        <select class="cyber-select">
-                            <option>Normal</option>
-                            <option>Fast</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="ios-btn primary" onclick="closeModal('settings')">Save</button>
                 </div>
             </div>
         </div>
@@ -373,7 +308,7 @@
         }
     </script>
     <script>
-        // Critical inline script for password toggling
+        // Password toggle logic inline to ensure it works
         function togglePass(id, btn) {
             const input = document.getElementById(id);
             const icon = btn.querySelector('i');

@@ -10,35 +10,26 @@ const APP_STATE = {
     gender: 'male', 
     category: 'home',
     subCategory: null,
-    userProfile: null,
-    settings: {
-        hqRendering: true,
-        debugMode: false,
-        speed: 'Normal'
-    }
+    userProfile: null
 };
 
-// Data Structure for the Sliding Sub-Menus
+// Sub-Menus Data
 const SYSTEM_DATA = {
     nervous: [
         { id: 'brain', title: 'Brain Model', desc: 'Cerebrum & Cerebellum' },
-        { id: 'nerves', title: 'Nerve Network', desc: 'Peripheral CNS' },
-        { id: 'spinal', title: 'Spinal Cord', desc: 'Vertebral Transmission' }
+        { id: 'nerves', title: 'Nerve Network', desc: 'Peripheral CNS' }
     ],
     circulation: [
         { id: 'heart', title: 'Heart', desc: '4-Chamber View' },
-        { id: 'veins', title: 'Vascular System', desc: 'Arteries & Veins' },
-        { id: 'blood', title: 'Blood Composition', desc: 'Cellular View' }
+        { id: 'veins', title: 'Vascular System', desc: 'Arteries & Veins' }
     ],
     skeletal: [
         { id: 'skull', title: 'Skull', desc: 'Cranial Structure' },
-        { id: 'spine', title: 'Spine', desc: 'Vertebral Column' },
-        { id: 'ribs', title: 'Rib Cage', desc: 'Thoracic Protection' }
+        { id: 'spine', title: 'Spine', desc: 'Vertebral Column' }
     ],
     digestive: [
         { id: 'stomach', title: 'Stomach', desc: 'Gastric Anatomy' },
-        { id: 'intestines', title: 'Intestines', desc: 'Small & Large' },
-        { id: 'liver', title: 'Liver & Pancreas', desc: 'Accessory Organs' }
+        { id: 'intestines', title: 'Intestines', desc: 'Small & Large' }
     ],
     genetic: [
         { id: 'dna', title: 'DNA Helix', desc: 'Double Helix Structure' },
@@ -48,8 +39,7 @@ const SYSTEM_DATA = {
     ],
     immune: [
         { id: 'wbc', title: 'White Blood Cells', desc: 'Leukocytes' },
-        { id: 'pathogen', title: 'Pathogen Map', desc: 'Viral Agents' },
-        { id: 'antibodies', title: 'Antibody Response', desc: 'Immune System' }
+        { id: 'pathogen', title: 'Pathogen Map', desc: 'Viral Agents' }
     ]
 };
 
@@ -58,22 +48,12 @@ const SYSTEM_DATA = {
 // ==========================================
 const Auth = {
     KEY: 'y314_database',
-    
-    // Retrieve DB from LocalStorage
     getDB: function() {
-        try {
-            const data = localStorage.getItem(this.KEY);
-            return data ? JSON.parse(data) : [];
-        } catch(e) {
-            console.error("DB Error:", e);
-            return [];
-        }
+        try { return JSON.parse(localStorage.getItem(this.KEY)) || []; } 
+        catch(e) { return []; }
     },
-    
-    // Save New User
     saveUser: function(userProfile) {
         const db = this.getDB();
-        // Check duplicate
         if (db.find(u => u.id === userProfile.id)) {
             return { success: false, msg: 'ERROR: OPERATOR ID EXISTS' };
         }
@@ -81,44 +61,15 @@ const Auth = {
         localStorage.setItem(this.KEY, JSON.stringify(db));
         return { success: true, msg: 'PROFILE CREATED. REDIRECTING...' };
     },
-    
-    // Login Check
     authenticate: function(id, pass) {
         const db = this.getDB();
         const user = db.find(u => u.id === id && u.pass === pass);
         if (user) return { success: true, user: user };
         return { success: false, msg: 'ACCESS DENIED: INVALID CREDENTIALS' };
-    },
-    
-    // Helpers
-    parseCSV: function(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                // Simulating CSV parsing logic
-                const text = event.target.result;
-                resolve({ imported: true, rawLength: text.length });
-            };
-            reader.onerror = (error) => reject(error);
-            reader.readAsText(file);
-        });
-    },
-    
-    processImage: function(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = (e) => resolve(e.target.result);
-            reader.onerror = (e) => reject(e);
-            reader.readAsDataURL(file);
-        });
     }
 };
 
-// ==========================================
-// 3. UI EVENT HANDLERS
-// ==========================================
-
-// --- View Switching (Login <-> Register) ---
+// UI Handlers
 const loginView = document.getElementById('login-view');
 const regView = document.getElementById('register-view');
 const authMsg = document.getElementById('auth-msg');
@@ -135,12 +86,9 @@ document.getElementById('btn-cancel').addEventListener('click', () => {
     authMsg.innerText = '';
 });
 
-// --- NEW GENDER SELECTION LOGIC (Blue/Pink Glow) ---
+// GENDER SELECTION LOGIC
 window.selectRegGender = function(gender) {
-    // 1. Update Hidden Input
     document.getElementById('reg-sex').value = gender;
-    
-    // 2. Update Visuals
     const maleBtn = document.getElementById('reg-male-btn');
     const femaleBtn = document.getElementById('reg-female-btn');
     
@@ -153,15 +101,15 @@ window.selectRegGender = function(gender) {
     }
 };
 
-// --- REGISTRATION SUBMISSION ---
+// REGISTER
 document.getElementById('btn-register').addEventListener('click', async () => {
+    const name = document.getElementById('reg-name').value;
     const id = document.getElementById('reg-id').value;
     const pass = document.getElementById('reg-pass').value;
     const gender = document.getElementById('reg-sex').value;
     
-    // Basic Validation
-    if (!id || !pass) {
-        authMsg.innerText = "CRITICAL: ID & PASSWORD REQUIRED";
+    if (!id || !pass || !name) {
+        authMsg.innerText = "CRITICAL: ALL FIELDS REQUIRED";
         authMsg.className = "msg-box msg-error";
         return;
     }
@@ -175,26 +123,17 @@ document.getElementById('btn-register').addEventListener('click', async () => {
     authMsg.innerText = "PROCESSING BIOMETRIC STREAMS...";
     authMsg.className = "msg-box";
 
-    // Gather Data
     let userData = {
-        id: id, 
-        pass: pass,
-        gender: gender,
+        name: name, id: id, pass: pass, gender: gender,
         height: document.getElementById('reg-height').value,
         weight: document.getElementById('reg-weight').value,
         fat: document.getElementById('reg-fat').value,
-        // Detailed medical data
         hr: document.getElementById('reg-hr').value,
         spo2: document.getElementById('reg-spo2').value,
         bp: document.getElementById('reg-bp').value,
-        ecg: document.getElementById('reg-ecg').value,
-        temp: document.getElementById('reg-temp').value,
-        glucose: document.getElementById('reg-glucose').value,
-        hydration: document.getElementById('reg-hydration').value,
         profilePic: null
     };
 
-    // Simulate Async Processing
     setTimeout(async () => {
         const result = Auth.saveUser(userData);
         if (result.success) {
@@ -208,28 +147,23 @@ document.getElementById('btn-register').addEventListener('click', async () => {
     }, 1000);
 });
 
-// --- LOGIN SUBMISSION ---
+// LOGIN
 document.getElementById('btn-login').addEventListener('click', () => {
     const id = document.getElementById('login-id').value;
     const pass = document.getElementById('login-pass').value;
-    
-    // Add loading effect to button
     const btn = document.getElementById('btn-login');
     const originalText = btn.innerHTML;
     btn.innerHTML = 'AUTHENTICATING...';
     
     setTimeout(() => {
         const res = Auth.authenticate(id, pass);
-        
         if (res.success) {
             APP_STATE.userProfile = res.user;
             APP_STATE.gender = res.user.gender;
             
-            // Sync UI with User Data
             document.getElementById('user-display').innerText = res.user.id.toUpperCase();
             syncGenderToggle(res.user.gender);
 
-            // Transition Animation
             const authLayer = document.getElementById('auth-layer');
             authLayer.style.opacity = '0';
             authLayer.style.transition = 'opacity 0.8s ease';
@@ -237,7 +171,7 @@ document.getElementById('btn-login').addEventListener('click', () => {
             setTimeout(() => {
                 authLayer.style.display = 'none';
                 document.getElementById('app-layer').classList.remove('hidden');
-                init3D(); // Launch 3D Engine
+                init3D();
             }, 800);
         } else {
             authMsg.innerText = res.msg;
@@ -248,30 +182,47 @@ document.getElementById('btn-login').addEventListener('click', () => {
 });
 
 // ==========================================
-// 4. NAVIGATION LOGIC (The "New Tab" Effect)
+// 3. APP LOGIC
 // ==========================================
 
-// Open "New Page"
+// THEME TOGGLE
+const themeBtn = document.getElementById('theme-toggle');
+const htmlEl = document.documentElement;
+
+themeBtn.addEventListener('click', () => {
+    const current = htmlEl.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    htmlEl.setAttribute('data-theme', next);
+    
+    const icon = themeBtn.querySelector('i');
+    if (next === 'light') {
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+        update3DLighting('light');
+    } else {
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+        update3DLighting('dark');
+    }
+});
+
+// NEW PAGE LOGIC
 window.openSystemPage = function(systemId, systemName) {
-    // 1. Shrink Main Nav
     const mainNav = document.getElementById('main-nav-rail');
     mainNav.classList.add('minimized');
 
-    // 2. Prepare Sub Menu Layer
     const subLayer = document.getElementById('sub-menu-layer');
     const title = document.getElementById('sub-menu-title');
     const content = document.getElementById('sub-menu-content');
     
     title.innerText = systemName;
-    content.innerHTML = ''; // Clear old buttons
+    content.innerHTML = ''; 
 
-    // 3. Create the Bubble Buttons dynamically
     const items = SYSTEM_DATA[systemId];
     if(items) {
         items.forEach((item, index) => {
             const btn = document.createElement('div');
             btn.className = 'sub-card ios-card';
-            // Stagger animation
             btn.style.animationDelay = `${index * 0.05}s`;
             btn.innerHTML = `
                 <div>
@@ -280,72 +231,40 @@ window.openSystemPage = function(systemId, systemName) {
                 </div>
                 <i class="fa-solid fa-chevron-right" style="opacity:0.3"></i>
             `;
-            // Add click event to load the 3D model part
             btn.onclick = () => loadSubModel(systemId, item.id, btn);
             content.appendChild(btn);
         });
     }
-
-    // 4. Slide in the new page
     subLayer.classList.remove('hidden');
-
-    // Load default model for this system
     APP_STATE.category = systemId;
-    APP_STATE.subCategory = null;
     loadModel(systemId);
 };
 
-// Go Back
 window.closeSystemPage = function() {
     const mainNav = document.getElementById('main-nav-rail');
     const subLayer = document.getElementById('sub-menu-layer');
-    
-    subLayer.classList.add('hidden'); // Hide sub page
-    
-    setTimeout(() => {
-        mainNav.classList.remove('minimized'); // Restore main rail
-    }, 100);
-
-    // Return to home model
+    subLayer.classList.add('hidden');
+    setTimeout(() => { mainNav.classList.remove('minimized'); }, 100);
     APP_STATE.category = 'home';
     loadModel('home');
     updateInfoPanelGeneric('Full Body', 'System Overview');
 };
 
 function loadSubModel(cat, sub, btnElement) {
-    // UI highlight
     document.querySelectorAll('.sub-card').forEach(b => b.classList.remove('active'));
     btnElement.classList.add('active');
-
-    APP_STATE.subCategory = sub;
-    console.log(`Loading Sub-System: ${cat}/${sub}`);
-    updateInfoPanelGeneric(sub, `Analyzing ${sub} structural integrity...`);
-    
-    // Simulate Data Loading Bar
-    const simArea = document.getElementById('sim-status-area');
-    const bar = simArea.querySelector('.bar-fill');
-    simArea.classList.remove('hidden');
-    bar.style.width = '0%';
-    
-    setTimeout(() => bar.style.width = '100%', 100);
-    setTimeout(() => simArea.classList.add('hidden'), 1500);
-
-    // In a real scenario, call loadModel with specific asset
-    // loadModel(sub);
+    updateInfoPanelGeneric(sub, `Focusing on ${sub} structure details.`);
 }
 
-// ==========================================
-// 5. 3D ENGINE & VISUALIZATION
-// ==========================================
+function updateInfoPanelGeneric(title, desc) {
+    document.getElementById('info-view').innerText = title.toUpperCase();
+    document.getElementById('info-desc').innerText = desc || "Scanning...";
+}
+
+// 3D ENGINE
 const ASSETS = {
-    male: {
-        home: './assets/human_male.glb', skeletal: './assets/human_male.glb', nervous: './assets/brain.glb',
-        circulation: './assets/heart.glb', genetic: './assets/dna.glb', digestive: './assets/human_male.glb', immune: './assets/hemoglobin.glb'
-    },
-    female: {
-        home: './assets/human_female.glb', skeletal: './assets/human_female.glb', nervous: './assets/brain.glb',
-        circulation: './assets/heart.glb', genetic: './assets/dna.glb', digestive: './assets/human_female.glb', immune: './assets/hemoglobin.glb'
-    }
+    male: { home: './assets/human_male.glb', skeletal: './assets/human_male.glb', nervous: './assets/brain.glb', circulation: './assets/heart.glb', genetic: './assets/dna.glb', digestive: './assets/human_male.glb', immune: './assets/hemoglobin.glb' },
+    female: { home: './assets/human_female.glb', skeletal: './assets/human_female.glb', nervous: './assets/brain.glb', circulation: './assets/heart.glb', genetic: './assets/dna.glb', digestive: './assets/human_female.glb', immune: './assets/hemoglobin.glb' }
 };
 
 let scene, camera, renderer, controls, currentModel;
@@ -354,10 +273,8 @@ let keyLight, rimLight, fillLight, amb;
 
 function init3D() {
     const container = document.getElementById('canvas-container');
-    if(!container) return;
-
     scene = new THREE.Scene();
-    scene.background = null; // Transparent for CSS gradient visibility
+    scene.background = null; 
 
     camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 100);
     camera.position.set(0, 1.5, 4.5);
@@ -368,38 +285,25 @@ function init3D() {
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     container.appendChild(renderer.domElement);
 
-    // Lighting Setup (Optimized for Glassy look)
     amb = new THREE.AmbientLight(0xffffff, 0.6); 
     scene.add(amb);
-
-    keyLight = new THREE.SpotLight(0x0a84ff, 25); // iOS Blue
+    keyLight = new THREE.SpotLight(0x0a84ff, 25);
     keyLight.position.set(5, 8, 5);
     keyLight.castShadow = true;
     scene.add(keyLight);
-
     rimLight = new THREE.SpotLight(0xffffff, 15);
     rimLight.position.set(-5, 5, -5);
     scene.add(rimLight);
-
     fillLight = new THREE.DirectionalLight(0xffffff, 1.5);
     fillLight.position.set(0, 2, 5);
     scene.add(fillLight);
 
-    // Controls
     controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-    controls.minDistance = 2;
-    controls.maxDistance = 10;
 
-    // GUI for Debugging (Optional)
-    // setupGUI();
-
-    // Initial Load
     loadModel('home');
     animate();
-
-    // Listeners
     window.addEventListener('resize', onWindowResize);
 }
 
@@ -407,53 +311,27 @@ const loader = new GLTFLoader();
 
 function loadModel(category) {
     const path = ASSETS[APP_STATE.gender][category];
-    // Fallback if asset missing
-    if(!path) {
-        console.warn(`Asset not found for ${category}, loading home...`);
-        return;
-    }
-
+    if(!path) return;
     loaderUI.style.display = 'block';
     
-    // Clean up old model
     if(currentModel) {
         scene.remove(currentModel);
-        currentModel.traverse(c => { 
-            if(c.isMesh) { 
-                c.geometry.dispose(); 
-                if(c.material) c.material.dispose(); 
-            }
-        });
+        currentModel.traverse(c => { if(c.isMesh) { c.geometry.dispose(); if(c.material) c.material.dispose(); }});
     }
 
-    // Load new model
     loader.load(path, (gltf) => {
         currentModel = gltf.scene;
-        
-        // Auto-Center
         const box = new THREE.Box3().setFromObject(currentModel);
         const center = box.getCenter(new THREE.Vector3());
         currentModel.position.x -= center.x;
         currentModel.position.y -= center.y;
         currentModel.position.z -= center.z;
         
-        // Apply Glassy Material for "Layered Detail"
-        if(category !== 'home') {
-            applyGlassMaterial(currentModel, category);
-        }
+        if(category !== 'home') applyGlassMaterial(currentModel, category);
         
         scene.add(currentModel);
-        
-        // Initial text update
-        if (!APP_STATE.subCategory) {
-            updateInfoPanelGeneric(category, "System Online");
-        }
-        
         loaderUI.style.display = 'none';
-    }, undefined, (error) => {
-        console.error(error);
-        loaderUI.style.display = 'none';
-    });
+    }, undefined, (e) => { console.error(e); loaderUI.style.display = 'none'; });
 }
 
 function applyGlassMaterial(model, cat) {
@@ -465,28 +343,22 @@ function applyGlassMaterial(model, cat) {
     if(cat === 'immune') color = 0x30b0c7;
 
     const mat = new THREE.MeshPhysicalMaterial({
-        color: color, 
-        metalness: 0.2, 
-        roughness: 0.1, 
-        transmission: 0.3, // Glass transparency
-        opacity: 0.8,
-        transparent: true,
-        clearcoat: 1.0,
-        clearcoatRoughness: 0.1
+        color: color, metalness: 0.2, roughness: 0.1, transmission: 0.3, 
+        opacity: 0.8, transparent: true, clearcoat: 1.0
     });
     
-    model.traverse((child) => { 
-        if(child.isMesh) child.material = mat; 
-    });
+    model.traverse((child) => { if(child.isMesh) child.material = mat; });
 }
 
-// ==========================================
-// 6. UTILITIES & MODALS
-// ==========================================
-
-function updateInfoPanelGeneric(title, desc) {
-    document.getElementById('info-view').innerText = title.toUpperCase();
-    document.getElementById('info-desc').innerText = desc || "Scanning...";
+function update3DLighting(theme) {
+    if (!scene) return;
+    if (theme === 'light') {
+        keyLight.color.setHex(0x007aff);
+        amb.intensity = 1.0;
+    } else {
+        keyLight.color.setHex(0x0a84ff);
+        amb.intensity = 0.6;
+    }
 }
 
 function onWindowResize() {
@@ -501,26 +373,7 @@ function animate() {
     renderer.render(scene, camera);
 }
 
-// Theme Switcher
-document.getElementById('theme-toggle').onclick = () => {
-    const htmlEl = document.documentElement;
-    const current = htmlEl.getAttribute('data-theme');
-    const next = current === 'dark' ? 'light' : 'dark';
-    htmlEl.setAttribute('data-theme', next);
-    
-    // Update lighting
-    if(keyLight) {
-        if(next === 'light') {
-            keyLight.color.setHex(0x007aff);
-            amb.intensity = 1.0;
-        } else {
-            keyLight.color.setHex(0x0a84ff);
-            amb.intensity = 0.6;
-        }
-    }
-};
-
-// Gender Toggles (In-App)
+// Gender Toggle Sync
 function syncGenderToggle(sex) {
     if(sex === 'male') {
         document.getElementById('btn-male').classList.add('active');
@@ -530,26 +383,18 @@ function syncGenderToggle(sex) {
         document.getElementById('btn-male').classList.remove('active');
     }
 }
-
 document.getElementById('btn-male').onclick = () => {
     APP_STATE.gender = 'male';
     syncGenderToggle('male');
     loadModel(APP_STATE.category);
 };
-
 document.getElementById('btn-female').onclick = () => {
     APP_STATE.gender = 'female';
     syncGenderToggle('female');
     loadModel(APP_STATE.category);
 };
 
-// Modal Logic
-window.openModal = function(id) {
-    document.getElementById(`modal-${id}`).classList.remove('hidden');
-};
-window.closeModal = function(id) {
-    document.getElementById(`modal-${id}`).classList.add('hidden');
-};
-window.resetCam = function() {
-    controls.reset();
-};
+window.openModal = function(id) { document.getElementById(`modal-${id}`).classList.remove('hidden'); };
+window.closeModal = function(id) { document.getElementById(`modal-${id}`).classList.add('hidden'); };
+window.resetCam = function() { controls.reset(); };
+document.getElementById('btn-logout').addEventListener('click', () => location.reload());
