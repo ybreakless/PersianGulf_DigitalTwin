@@ -1,200 +1,113 @@
+
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { AssetLoader } from './3d_engine/asset_loader.js';
+import { ProceduralHuman } from './models/ProceduralHuman.js';
 
-// --- DATA ---
-const SYSTEMS = {
-    "NERVOUS": ["Brain", "Neurons", "Spine", "Synapse"],
-    "CIRCULATORY": ["Heart", "Arteries", "Veins", "Red Blood Cells", "White Blood Cells", "T-Cells"],
-    "RESPIRATORY": ["Lungs", "Alveoli"],
-    "DIGESTIVE": ["Stomach", "Liver", "Intestine", "Pancreas"],
-    "FILTRATION": ["Kidneys", "Bladder"],
-    "SKELETAL": ["Bone Marrow"],
-    "GENETICS": ["DNA Helix", "RNA Strand", "Protein", "Enzyme"],
-    "IMMUNE": ["Antibodies", "Virus", "T-Cells", "White Blood Cells"]
-};
+let scene, camera, renderer, controls;
+let currentModel = null;
+let isRotating = false;
+let isLightMode = false;
 
-// --- SCENE SETUP ---
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x020202); // Start Dark
-
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 0, 4);
-
-const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bio-canvas'), antialias: true, alpha: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-
-// --- LIGHTING ---
-const ambient = new THREE.AmbientLight(0x444444);
-scene.add(ambient);
-const dirLight = new THREE.DirectionalLight(0xffffff, 2);
-dirLight.position.set(2, 5, 2);
-scene.add(dirLight);
-const rimLight = new THREE.SpotLight(0x00d2ff, 10);
-rimLight.position.set(-2, 2, -2);
-scene.add(rimLight);
-
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-controls.enablePan = false; 
-
-const loader = new AssetLoader(scene);
-loader.load("Human Body", "BODY");
-
-// --- THEME LOGIC ---
-window.toggleTheme = function() {
-    const html = document.documentElement;
-    const current = html.getAttribute('data-theme');
-    const next = current === 'dark' ? 'light' : 'dark';
-    html.setAttribute('data-theme', next);
-
-    if (next === 'light') {
-        scene.background = new THREE.Color(0xe0e5ec);
-        rimLight.color.setHex(0x0066cc);
-        scene.fog = new THREE.FogExp2(0xe0e5ec, 0.02);
-    } else {
-        scene.background = new THREE.Color(0x020202);
-        rimLight.color.setHex(0x00d2ff);
-        scene.fog = null;
-    }
-};
-
-// --- SIMULATION LOGIC ---
-window.triggerSimulation = function() {
-    const mode = document.getElementById('sim-mode').value;
-    const btn = document.getElementById('btn-simulate');
-    btn.innerHTML = "RUNNING PROTOCOL...";
+export function initEngine() {
+    const container = document.getElementById('canvas-container');
     
-    // Simulate Processing Time
-    setTimeout(() => {
-        let health, status, color;
-        
-        if (mode === 'PATHOGEN') {
-            health = Math.floor(Math.random() * 40 + 40); // Usually low
-            status = health > 70 ? "CLEAR" : "VIRAL LOAD DETECTED";
-            color = health > 70 ? "#009933" : "#cc0000";
-            // Visual feedback: Flash Red if sick
-            if (health <= 70 && loader.currentMesh) {
-                loader.currentMesh.traverse((child) => {
-                   if(child.isMesh) child.material.emissive.setHex(0xff0000);
-                });
-            }
-        } 
-        else if (mode === 'STRUCTURAL') {
-            health = Math.floor(Math.random() * 20 + 80); // Usually high
-            status = "INTEGRITY STABLE";
-            color = "#009933";
-            // Visual: Pulse fast
-            loader.isPulse = true;
-        }
-        else { // NEURAL
-            health = 95;
-            status = "SYNAPTIC FIRING OPTIMAL";
-            color = "#009933";
-            // Visual: Spin fast
-            loader.isSpin = true;
-        }
+    // 1. SCENE
+    scene = new THREE.Scene();
+    // Default background matches dark CSS
+    scene.background = new THREE.Color(0x020205); 
 
-        document.getElementById('val-health').innerText = health + "%";
-        document.getElementById('bar-health').style.width = health + "%";
-        document.getElementById('bar-health').style.background = color;
-        const statusDiv = document.getElementById('disp-status');
-        statusDiv.innerText = status;
-        statusDiv.style.color = color;
-        
-        btn.innerHTML = "INITIATE PROTOCOL";
-    }, 1500);
-};
+    // 2. CAMERA - FIX (Standard Scale)
+    // Positioned at Y=0.9 (Waist/Torso level), Z=2.8 (Good full-body view)
+    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 0.9, 2.8); 
 
-// --- UI GENERATION ---
-setTimeout(() => { document.getElementById('system-nav').classList.add('visible'); }, 500);
-const navContainer = document.getElementById('system-nav');
+    // 3. RENDERER
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild(renderer.domElement);
 
-Object.keys(SYSTEMS).forEach(sys => {
-    const bubble = document.createElement('div');
-    bubble.className = 'sys-bubble';
-    bubble.innerText = sys;
-    bubble.onclick = () => enterSystemMode(sys, bubble);
-    navContainer.appendChild(bubble);
-});
+    // 4. LIGHTS
+    setupLights();
 
-function enterSystemMode(sysName, bubble) {
-    document.getElementById('start-overlay').classList.add('hidden');
-    document.getElementById('control-panel').classList.add('visible');
-    document.querySelectorAll('.sys-bubble').forEach(b => b.classList.remove('active'));
-    bubble.classList.add('active');
-
-    const dock = document.getElementById('organ-dock');
-    dock.innerHTML = '';
-    dock.classList.add('visible');
+    // 5. CONTROLS
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.target.set(0, 0.9, 0); // Rotate around center of body
     
-    SYSTEMS[sysName].forEach(organ => {
-        const pill = document.createElement('div');
-        pill.className = 'organ-pill';
-        pill.innerText = organ;
-        pill.onclick = () => {
-            document.querySelectorAll('.organ-pill').forEach(p => p.classList.remove('active'));
-            pill.classList.add('active');
-            loader.load(organ, sysName);
-            document.getElementById('active-organ-title').innerText = organ;
-            resetData();
-        };
-        dock.appendChild(pill);
+    window.addEventListener('resize', onWindowResize);
+    animate();
+}
+
+function setupLights() {
+    // Clear old lights (but keep meshes)
+    scene.children.forEach(c => {
+        if(c.isLight) scene.remove(c);
     });
-    if(dock.firstChild) dock.firstChild.click();
+
+    const ambientLight = new THREE.AmbientLight(isLightMode ? 0xffffff : 0x404040, 2);
+    scene.add(ambientLight);
+
+    // Dynamic Main Light Color
+    const mainLightColor = isLightMode ? 0x0088cc : 0x00f3ff;
+    const mainLight = new THREE.DirectionalLight(mainLightColor, 1.5);
+    mainLight.position.set(5, 5, 5);
+    scene.add(mainLight);
+
+    const fillLight = new THREE.PointLight(0xff0055, 1.0);
+    fillLight.position.set(-5, 2, 5);
+    scene.add(fillLight);
+    
+    // Background update
+    scene.background = new THREE.Color(isLightMode ? 0xe0e5ec : 0x020205);
 }
 
-function resetData() {
-    document.getElementById('val-health').innerText = "--";
-    document.getElementById('bar-health').style.width = "0%";
-    document.getElementById('disp-status').innerText = "STANDBY";
-    const theme = document.documentElement.getAttribute('data-theme');
-    document.getElementById('disp-status').style.color = theme === 'dark' ? '#fff' : '#000';
+export function toggleThemeMode(isLight) {
+    isLightMode = isLight;
+    setupLights(); // Refresh lights and background color
 }
 
-window.resetToHome = function() {
-    loader.load("Human Body", "BODY");
-    document.getElementById('start-overlay').classList.remove('hidden');
-    document.getElementById('control-panel').classList.remove('visible');
-    document.getElementById('organ-dock').classList.remove('visible');
-    document.querySelectorAll('.sys-bubble').forEach(b => b.classList.remove('active'));
-};
+export function loadModel(modelName) {
+    if (currentModel) scene.remove(currentModel.mesh);
 
-// --- GRAPH LOOP ---
-const ecgCanvas = document.getElementById('ecg-canvas');
-const ctx = ecgCanvas.getContext('2d');
-let graphData = new Array(100).fill(40);
-
-function drawGraph() {
-    ctx.fillStyle = 'rgba(0,0,0,0.1)'; 
-    ctx.fillRect(0,0,250,80);
+    const gender = modelName.includes('female') ? 'female' : 'male';
     
-    // Simple Heartbeat Math
-    const t = Date.now() / 300;
-    const beat = (Math.sin(t)*Math.sin(t*3)*Math.sin(t*5)); 
-    let val = 40 + (beat * 30);
-    
-    graphData.push(val);
-    graphData.shift();
-    
-    ctx.beginPath();
-    ctx.strokeStyle = '#00ff41';
-    ctx.lineWidth = 2;
-    for(let i=0; i<100; i++) ctx.lineTo(i*2.5, graphData[i]);
-    ctx.stroke();
+    // Create new procedural model
+    currentModel = new ProceduralHuman(gender);
+    currentModel.mesh.position.set(0, 0, 0);
+    scene.add(currentModel.mesh);
 }
 
-// --- ANIMATION LOOP ---
-const clock = new THREE.Clock();
+export function setRotation(bool) {
+    isRotating = bool;
+}
+
+export function setZoom(val) {
+    // Slider 10-1000 maps to Distance ~1.5 to ~6.0
+    // Inverted logic: High slider value = Close zoom (small distance)
+    const norm = val / 1000; 
+    const dist = 6.0 - (norm * 4.5); 
+    
+    const dir = camera.position.clone().sub(controls.target).normalize();
+    camera.position.copy(controls.target).add(dir.multiplyScalar(dist));
+}
+
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
 function animate() {
     requestAnimationFrame(animate);
-    loader.animate(clock.getElapsedTime());
-    
-    // FORCE CENTER
-    controls.target.set(0, 0, 0); 
-    
-    drawGraph();
     controls.update();
+    
+    if(isRotating && currentModel) {
+        currentModel.mesh.rotation.y += 0.005;
+    }
+    
+    if(currentModel) currentModel.animate();
+    
     renderer.render(scene, camera);
 }
-animate();

@@ -3,24 +3,20 @@
     --bg-color: #020202;
     --text-color: #ffffff;
     --accent-color: #00d2ff;
-    --accent-glow: rgba(0, 210, 255, 0.4);
     --panel-bg: rgba(5, 12, 18, 0.9);
     --border-color: rgba(0, 210, 255, 0.3);
     --bubble-bg: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.4));
     --status-ok: #00ff41;
-    --status-bad: #ff0000;
 }
 
 [data-theme="light"] {
     --bg-color: #e0e5ec;
     --text-color: #1a1a1a;
     --accent-color: #0066cc;
-    --accent-glow: rgba(0, 102, 204, 0.3);
     --panel-bg: rgba(255, 255, 255, 0.9);
     --border-color: rgba(0, 0, 0, 0.1);
     --bubble-bg: radial-gradient(circle at 30% 30%, #ffffff, #d1d9e6);
     --status-ok: #009933;
-    --status-bad: #cc0000;
 }
 
 /* BASE FONTS */

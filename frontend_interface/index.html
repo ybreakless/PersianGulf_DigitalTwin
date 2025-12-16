@@ -2,74 +2,392 @@
 <html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BioTwin: Pro System</title>
+    <title>Y-314: BioTwin Interface | Ultimate Edition</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <script type="importmap">
-        { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }
-    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="ui-layer">
-        <header onclick="window.resetToHome()">
-            <div class="brand">
-                <h1>BioTwin <span>PRO</span></h1>
-                <div class="subtitle">ADVANCED BIO-SIMULATION</div>
-            </div>
-            
-            <div class="header-right">
-                <button id="theme-toggle" onclick="window.toggleTheme()" title="Switch Light/Dark Mode">☀ / ☾</button>
-                <div class="system-status"><span class="dot"></span> ONLINE</div>
-            </div>
-        </header>
 
-        <div id="start-overlay">
-            <h2>VIRTUAL PATIENT</h2>
-            <p>SELECT A SYSTEM TO BEGIN ANALYSIS</p>
+    <div id="auth-layer">
+        
+        <div class="bg-noise"></div>
+        <div class="bg-gradient-orb"></div>
+        <div class="grid-overlay"></div>
+
+        <div class="split-container">
+            
+            <div class="form-side">
+                <div class="glass-panel ultra-glass">
+                    
+                    <div class="panel-header">
+                        <div class="logo-mark">🧬</div>
+                        <div class="header-text">
+                            <h2>ACCESS PORTAL</h2>
+                            <span class="version-tag">V.3.1.4_STABLE</span>
+                        </div>
+                    </div>
+
+                    <div id="login-view" class="view-section">
+                        <div class="input-group">
+                            <label><i class="fas fa-id-badge"></i> OPERATOR ID</label>
+                            <input type="text" id="login-id" placeholder="Enter Y-314 Identification" autocomplete="off">
+                        </div>
+                        <div class="input-group">
+                            <label><i class="fas fa-key"></i> PASSCODE</label>
+                            <div class="password-wrapper">
+                                <input type="password" id="login-pass" placeholder="••••••••••••">
+                                <button class="toggle-pass" onclick="togglePass('login-pass', this)">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="auth-actions">
+                            <button id="btn-login" class="neon-btn primary">
+                                <span class="btn-content">INITIALIZE SESSION</span>
+                                <div class="btn-glare"></div>
+                            </button>
+                        </div>
+                        
+                        <div class="footer-text">
+                            <p>Unregistered Bio-Signature? <span id="go-to-register">Create New Profile</span></p>
+                        </div>
+                    </div>
+
+                    <div id="register-view" class="view-section hidden">
+                        <div class="scroll-wrapper custom-scrollbar">
+                            
+                            <div class="form-block">
+                                <h4>00 // SECURITY CREDENTIALS</h4>
+                                <div class="grid-2">
+                                    <input type="text" id="reg-id" placeholder="Assign ID *" class="cyber-input">
+                                    <div class="password-wrapper">
+                                        <input type="password" id="reg-pass" placeholder="Set Password *" class="cyber-input">
+                                        <button class="toggle-pass" onclick="togglePass('reg-pass', this)">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-block">
+                                <h4>01 // CORE BIOMETRICS</h4>
+                                
+                                <label class="sub-label">BIOLOGICAL PROFILE</label>
+                                <div class="gender-selector-container">
+                                    <button class="gender-select-btn male" id="reg-male-btn" onclick="selectRegGender('male')">
+                                        <i class="fas fa-mars"></i> MALE
+                                    </button>
+                                    <button class="gender-select-btn female" id="reg-female-btn" onclick="selectRegGender('female')">
+                                        <i class="fas fa-venus"></i> FEMALE
+                                    </button>
+                                    <input type="hidden" id="reg-sex" value=""> 
+                                </div>
+
+                                <div class="grid-3 mt-10">
+                                    <div class="input-wrap">
+                                        <input type="number" id="reg-height" placeholder="Height" class="cyber-input">
+                                        <span class="unit">cm</span>
+                                    </div>
+                                    <div class="input-wrap">
+                                        <input type="number" id="reg-weight" placeholder="Weight" class="cyber-input">
+                                        <span class="unit">kg</span>
+                                    </div>
+                                    <div class="input-wrap">
+                                        <input type="number" id="reg-fat" placeholder="Body Fat" class="cyber-input">
+                                        <span class="unit">%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-block">
+                                <h4>02 // CARDIOVASCULAR METRICS</h4>
+                                <div class="grid-2">
+                                    <div class="input-wrap">
+                                        <input type="number" id="reg-hr" placeholder="Resting HR" class="cyber-input">
+                                        <span class="unit">BPM</span>
+                                    </div>
+                                    <div class="input-wrap">
+                                        <input type="number" id="reg-spo2" placeholder="SpO2 Level" class="cyber-input">
+                                        <span class="unit">%</span>
+                                    </div>
+                                    <input type="text" id="reg-bp" placeholder="BP (e.g. 120/80)" class="cyber-input">
+                                    <select id="reg-ecg" class="cyber-input">
+                                        <option value="" disabled selected>ECG Status</option>
+                                        <option value="Normal">Normal Sinus Rhythm</option>
+                                        <option value="Arrhythmia">Arrhythmia Detected</option>
+                                        <option value="Unknown">Not Measured</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-block">
+                                <h4>03 // RESPIRATORY SYSTEM</h4>
+                                <div class="grid-3">
+                                    <input type="number" id="reg-fvc" placeholder="FVC (L)" class="cyber-input">
+                                    <input type="number" id="reg-pef" placeholder="PEF (L/m)" class="cyber-input">
+                                    <input type="number" id="reg-rr" placeholder="RR (b/m)" class="cyber-input">
+                                </div>
+                            </div>
+
+                            <div class="form-block">
+                                <h4>04 // METABOLIC & CHEMICAL</h4>
+                                <div class="grid-3">
+                                    <input type="number" id="reg-temp" placeholder="Temp (°C)" class="cyber-input">
+                                    <input type="number" id="reg-glucose" placeholder="Glucose" class="cyber-input">
+                                    <input type="number" id="reg-hydration" placeholder="Hydration" class="cyber-input">
+                                </div>
+                            </div>
+
+                            <div class="form-block">
+                                <h4>05 // DATA IMPORT</h4>
+                                <div class="upload-area">
+                                    <div class="file-box">
+                                        <i class="fas fa-camera"></i>
+                                        <label>Patient Photo</label>
+                                        <input type="file" id="upload-photo" accept="image/*">
+                                    </div>
+                                    <div class="file-box">
+                                        <i class="fas fa-file-csv"></i>
+                                        <label>Medical .CSV</label>
+                                        <input type="file" id="upload-csv" accept=".csv">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div> 
+                        
+                        <div class="action-buttons">
+                            <button id="btn-cancel" class="text-btn">ABORT REGISTRATION</button>
+                            <button id="btn-register" class="neon-btn secondary">CONFIRM ENTRY</button>
+                        </div>
+                    </div>
+                    
+                    <div id="auth-msg" class="msg-box"></div>
+                </div>
+            </div>
+
+            <div class="intro-side">
+                <div class="intro-content">
+                    <h1 class="main-title">Y-314</h1>
+                    <h2 class="sub-title">BioTwin <span class="highlight">Core</span></h2>
+                    <div class="divider-line"></div>
+                    <p class="description">
+                        Welcome to the <strong>Y-314 BioTwin Initiative</strong>. 
+                        This platform utilizes high-fidelity 3D rendering and real-time Python data integration 
+                        to create accurate digital twins for medical diagnosis, simulation, and predictive analysis.
+                    </p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-microchip"></i> Real-time Python Core</li>
+                        <li><i class="fas fa-cube"></i> High-Fidelity 3D Assets</li>
+                        <li><i class="fas fa-lock"></i> Encrypted Patient Database</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="app-layer" class="hidden">
+        
+        <div id="canvas-container"></div>
+
+        <div id="loader">
+            <div class="spinner"></div>
+            <p>LOADING ASSETS...</p>
         </div>
 
-        <nav id="system-nav"></nav>
-
-        <aside id="control-panel">
-            <h2 id="active-organ-title">TARGET SYSTEM</h2>
-            
-            <div class="panel-content">
-                <div class="monitor-wrapper">
-                    <div class="monitor-label">LIVE BIO-SIGNALS</div>
-                    <canvas id="ecg-canvas" width="250" height="80"></canvas>
-                </div>
-
-                <div class="sim-selector">
-                    <label>ANALYSIS PROTOCOL:</label>
-                    <select id="sim-mode">
-                        <option value="PATHOGEN">Viral Pathogen Scan</option>
-                        <option value="STRUCTURAL">Structural Integrity</option>
-                        <option value="NEURAL">Neural Activity</option>
-                    </select>
-                </div>
-
-                <div class="data-row"><span class="label">DIAGNOSIS</span><span class="value" id="disp-status">STANDBY</span></div>
-                <hr>
-                <div class="data-row"><span class="label">INTEGRITY</span><span class="value" id="val-health">--</span></div>
-                <div class="bar-container"><div id="bar-health" class="bar-fill" style="width: 0%"></div></div>
-                
-                <button id="btn-simulate" onclick="window.triggerSimulation()">INITIATE PROTOCOL</button>
-                <button class="secondary" onclick="window.resetToHome()">RESET VIEW</button>
+        <div class="floating-hud">
+            <div class="hud-left">
+                <span class="hud-brand">BIOTWIN <span style="font-weight:300; opacity:0.6;">OS</span></span>
             </div>
-        </aside>
+            
+            <div class="hud-center">
+                <div class="status-pill">
+                    <span class="dot"></span> ONLINE
+                </div>
+                <div class="user-pill" id="user-display">GUEST</div>
+            </div>
 
-        <div id="organ-dock"></div>
+            <div class="hud-right">
+                <button id="theme-toggle" class="icon-btn" title="Toggle Theme">
+                    <i class="fa-solid fa-sun"></i>
+                </button>
+                <button class="icon-btn" onclick="openModal('settings')" title="Settings">
+                    <i class="fa-solid fa-gear"></i>
+                </button>
+                <button id="btn-logout" class="icon-btn alert" title="Logout">
+                    <i class="fa-solid fa-power-off"></i>
+                </button>
+            </div>
+        </div>
 
-        <footer id="log-console">
-            SYSTEM LOGS: Engine Ready. Waiting for input.
-        </footer>
+        <div class="nav-rail" id="main-nav-rail">
+            
+            <button class="nav-item active ios-card" data-target="home">
+                <div class="icon-bubble gray"><i class="fa-solid fa-house"></i></div>
+                <span class="label">Overview</span>
+            </button>
+
+            <button class="nav-item ios-card" onclick="openSystemPage('genetic', 'Genetics')">
+                <div class="icon-bubble blue"><i class="fa-solid fa-dna"></i></div>
+                <span class="label">Genetic</span>
+                <i class="fa-solid fa-chevron-right arrow"></i>
+            </button>
+
+            <button class="nav-item ios-card" onclick="openSystemPage('nervous', 'Nervous System')">
+                <div class="icon-bubble pink"><i class="fa-solid fa-brain"></i></div>
+                <span class="label">Nervous</span>
+                <i class="fa-solid fa-chevron-right arrow"></i>
+            </button>
+
+            <button class="nav-item ios-card" onclick="openSystemPage('circulation', 'Circulation')">
+                <div class="icon-bubble red"><i class="fa-solid fa-heart-pulse"></i></div>
+                <span class="label">Circulation</span>
+                <i class="fa-solid fa-chevron-right arrow"></i>
+            </button>
+            
+            <button class="nav-item ios-card" onclick="openSystemPage('skeletal', 'Skeletal')">
+                <div class="icon-bubble white"><i class="fa-solid fa-bone"></i></div>
+                <span class="label">Skeletal</span>
+                <i class="fa-solid fa-chevron-right arrow"></i>
+            </button>
+
+            <button class="nav-item ios-card" onclick="openSystemPage('digestive', 'Digestive')">
+                <div class="icon-bubble orange"><i class="fa-solid fa-hotdog"></i></div>
+                <span class="label">Digestive</span>
+                <i class="fa-solid fa-chevron-right arrow"></i>
+            </button>
+
+            <button class="nav-item ios-card" onclick="openSystemPage('immune', 'Immune')">
+                <div class="icon-bubble cyan"><i class="fa-solid fa-shield-virus"></i></div>
+                <span class="label">Immune</span>
+                <i class="fa-solid fa-chevron-right arrow"></i>
+            </button>
+        </div>
+
+        <div id="sub-menu-layer" class="hidden">
+            <button class="back-btn ios-card" onclick="closeSystemPage()">
+                <i class="fa-solid fa-arrow-left"></i> Back to Menu
+            </button>
+            
+            <h2 id="sub-menu-title">System Name</h2>
+
+            <div class="sub-grid" id="sub-menu-content">
+            </div>
+        </div>
+
+        <div class="info-panel ios-card">
+            <div class="panel-header-small">
+                <h3><i class="fas fa-chart-pie"></i> LIVE ANALYSIS</h3>
+            </div>
+            <div class="panel-body">
+                <div class="data-row">
+                    <span class="label">ACTIVE VIEW</span>
+                    <span id="info-view" class="value">FULL BODY</span>
+                </div>
+                <div class="desc-box">
+                    <p id="info-desc">Initializing full systemic scan. Waiting for input...</p>
+                </div>
+                
+                <div id="sim-status-area" class="hidden">
+                     <div class="sim-progress-bar">
+                         <div class="bar-fill"></div>
+                     </div>
+                     <span class="sim-text">Processing...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-dock ios-card">
+            <div class="gender-toggle">
+                <button id="btn-male" class="gender-btn active" title="Load Male Model">
+                    <i class="fa-solid fa-mars"></i>
+                </button>
+                <button id="btn-female" class="gender-btn" title="Load Female Model">
+                    <i class="fa-solid fa-venus"></i>
+                </button>
+            </div>
+            
+            <div class="divider-vert"></div>
+            
+            <div class="control-unit wide">
+                <i class="fa-solid fa-minus small-icon"></i>
+                <input type="range" id="range-zoom" min="10" max="100" value="50">
+                <i class="fa-solid fa-plus small-icon"></i>
+            </div>
+
+            <div class="divider-vert"></div>
+
+            <button class="icon-btn-dock" onclick="resetCam()">
+                <i class="fas fa-compress-arrows-alt"></i>
+            </button>
+        </div>
+
+        <div id="modal-settings" class="modal-backdrop hidden">
+            <div class="modal-card ios-card">
+                <div class="modal-header">
+                    <h3>Settings</h3>
+                    <button onclick="closeModal('settings')"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="setting-row">
+                        <span>High Quality Rendering</span>
+                        <input type="checkbox" checked>
+                    </div>
+                    <div class="setting-row">
+                        <span>Python Debug Mode</span>
+                        <input type="checkbox">
+                    </div>
+                    <div class="setting-row">
+                        <span>Animation Speed</span>
+                        <select class="cyber-select">
+                            <option>Normal</option>
+                            <option>Fast</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="ios-btn primary" onclick="closeModal('settings')">Save</button>
+                </div>
+            </div>
+        </div>
+
     </div>
-    <canvas id="bio-canvas"></canvas>
-    <script type="module" src="js/main.js"></script>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+                "lil-gui": "https://unpkg.com/lil-gui@0.19.1/dist/lil-gui.esm.min.js"
+            }
+        }
+    </script>
+    <script>
+        // Critical inline script for password toggling
+        function togglePass(id, btn) {
+            const input = document.getElementById(id);
+            const icon = btn.querySelector('i');
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = "password";
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+    </script>
+    <script type="module" src="main.js"></script>
 </body>
 </html>

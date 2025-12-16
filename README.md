@@ -36,7 +36,7 @@ Since this project uses modern ES6 modules for better architecture, it needs a l
 1.  **Clone the repository:**
 
     ```bash
-    git clone [https://github.com/YOUR_USERNAME/BioTwin-Ultimate.git](https://github.com/YOUR_USERNAME/BioTwin-Ultimate.git)
+    git clone [https://github.com/ybreakless/BioTwin-Ultimate.git]
     ```
 
 2.  **Navigate to the interface folder:**
@@ -49,6 +49,12 @@ Since this project uses modern ES6 modules for better architecture, it needs a l
 
     ```bash
     python -m http.server
+    ```
+
+    or
+
+    ```bash
+    python launch.frontend.py
     ```
 
 4.  **Launch:**

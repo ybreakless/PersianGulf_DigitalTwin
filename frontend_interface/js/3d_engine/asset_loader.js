@@ -47,17 +47,14 @@ export class AssetLoader {
             this.buildHelix(false); 
         }
         else if (name === "Protein") {
-            // Complex knotted structure
             this.currentMesh.add(new THREE.Mesh(new THREE.TorusKnotGeometry(0.7, 0.2, 64, 8, 3, 5), getMat(0x0088FF)));
         }
         else if (name === "Enzyme") {
-            // Pacman shape
             this.currentMesh.add(new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32, 0, Math.PI * 1.7), getMat(0x0088FF)));
         }
 
         // --- 2. NERVOUS SYSTEM ---
         else if (name === "Brain") {
-            // High-Fidelity Bi-Lobed Brain
             const mat = getMat(0xFF00D2); 
             const left = new THREE.Mesh(new THREE.SphereGeometry(0.8, 32, 32), mat);
             left.scale.set(0.8, 1, 1.2); left.position.x = -0.65; left.rotation.z = 0.1;
@@ -68,36 +65,28 @@ export class AssetLoader {
             this.currentMesh.add(left, right, cereb);
         }
         else if (name === "Neurons") {
-            // Star shape soma
             const body = new THREE.Mesh(new THREE.IcosahedronGeometry(0.5, 0), getMat(0xFF00D2));
-            // Dendrites (Spikes)
             const spikes = new THREE.Mesh(new THREE.IcosahedronGeometry(1.2, 0), getMat(0xFF00D2, 0.3));
             this.currentMesh.add(body, spikes);
         }
         else if (name === "Spine") {
-            // Segmented Column (Vertebrae)
             const mat = getMat(0xEEEEEE);
             for(let i=0; i<5; i++) {
                 const vert = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 0.3, 16), mat);
                 vert.position.y = (i - 2) * 0.5;
-                // Add disc
                 const disc = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 0.1, 16), getMat(0x888888));
                 disc.position.y = (i - 2) * 0.5 + 0.2;
                 this.currentMesh.add(vert, disc);
             }
         }
         else if (name === "Synapse") {
-            // Gap junction
             const m1 = new THREE.Mesh(new THREE.SphereGeometry(0.6), getMat(0xFF00D2)); m1.position.x = -0.8;
             const m2 = new THREE.Mesh(new THREE.SphereGeometry(0.6), getMat(0xFF00D2)); m2.position.x = 0.8;
-            // Sparks
-            const spark = new THREE.Mesh(new THREE.IcosahedronGeometry(0.3), getMat(0xFFFFFF));
-            this.currentMesh.add(m1, m2, spark);
+            this.currentMesh.add(m1, m2);
         }
 
         // --- 3. CIRCULATORY SYSTEM ---
         else if (name === "Heart") {
-            // High-Fidelity Heart
             this.isPulse = true; this.isSpin = false;
             const muscleMat = getMat(0xCC0000, 1.0, 0.4); 
             const veinMat = getMat(0x0055FF, 1.0, 0.2);   
@@ -122,7 +111,6 @@ export class AssetLoader {
             this.currentMesh.add(new THREE.Mesh(geo, getMat(0x0033FF)));
         }
         else if (name === "Red Blood Cells") {
-            // Flattened Donut (Biconcave disc)
             const cell = new THREE.Mesh(new THREE.TorusGeometry(0.7, 0.35, 16, 50), getMat(0xFF0000));
             cell.scale.set(1, 1, 0.3);
             this.currentMesh.add(cell);
@@ -130,7 +118,6 @@ export class AssetLoader {
 
         // --- 4. STRUCTURAL ---
         else if (name === "Bone Marrow") {
-            // Cross-section
             const boneMat = getMat(0xFFFFFF, 1.0, 0.8); 
             const shell = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 3, 32, 1, true), boneMat);
             const marrowMat = getMat(0xAA0000, 1.0, 0.9); 
@@ -144,7 +131,6 @@ export class AssetLoader {
 
         // --- 5. RESPIRATORY ---
         else if (name === "Lungs") {
-            // High-Fidelity Lungs
             const tissueMat = getMat(0xFF8888, 0.9); 
             const right = new THREE.Mesh(new THREE.CapsuleGeometry(0.7, 1.4, 4, 16), tissueMat);
             right.position.x = 0.75; right.scale.set(1, 1, 1.2);
@@ -155,7 +141,6 @@ export class AssetLoader {
             this.currentMesh.add(right, left, trachea);
         }
         else if (name === "Alveoli") {
-            // Grape-like Cluster
             const mat = getMat(0xFF8888);
             for(let i=0; i<8; i++) {
                 const sac = new THREE.Mesh(new THREE.SphereGeometry(0.4), mat);
@@ -166,32 +151,27 @@ export class AssetLoader {
 
         // --- 6. DIGESTIVE ---
         else if (name === "Stomach") {
-             // J-Shape (Torus segment)
              const stomach = new THREE.Mesh(new THREE.TorusGeometry(0.8, 0.45, 16, 20, 3.5), getMat(0xFF8800));
              stomach.rotation.z = 2;
              this.currentMesh.add(stomach);
         }
         else if (name === "Liver") {
-            // Wedge Shape
-            const liv = new THREE.Mesh(new THREE.ConeGeometry(1.2, 2, 4), getMat(0x8B0000)); // Dark Red/Brown
+            const liv = new THREE.Mesh(new THREE.ConeGeometry(1.2, 2, 4), getMat(0x8B0000));
             liv.rotation.x = Math.PI/2;
             liv.scale.set(1, 1, 0.6);
             this.currentMesh.add(liv);
         }
         else if (name === "Pancreas") {
-            // Tapered Capsule
             const pan = new THREE.Mesh(new THREE.CapsuleGeometry(0.3, 2, 4, 16), getMat(0xFFDD00));
             pan.rotation.z = Math.PI/2;
             this.currentMesh.add(pan);
         }
         else if (name === "Intestine") {
-            // Complex Coil
             this.currentMesh.add(new THREE.Mesh(new THREE.TorusKnotGeometry(0.7, 0.25, 100, 16, 3, 4), getMat(0xFF8800)));
         }
 
         // --- 7. FILTRATION ---
         else if (name === "Kidneys") {
-            // Bean shapes
             const kGeo = new THREE.SphereGeometry(0.6, 32, 32); 
             kGeo.scale(1, 1.5, 0.8);
             const k1 = new THREE.Mesh(kGeo, getMat(0x8B4513)); k1.position.x = -0.8; k1.rotation.z = 0.2;
@@ -204,7 +184,6 @@ export class AssetLoader {
 
         // --- 8. IMMUNE ---
         else if (name === "T-Cells") {
-            // Spiky (Green)
             const mat = getMat(0x00FF41, 0.9);
             const body = new THREE.Mesh(new THREE.IcosahedronGeometry(1, 1), mat); 
             const spikeGeo = new THREE.ConeGeometry(0.1, 0.5, 8);
@@ -217,7 +196,6 @@ export class AssetLoader {
             this.currentMesh.add(body);
         }
         else if (name === "White Blood Cells") {
-            // SOLID WHITE & Amorphous
             const mat = getMat(0xFFFFFF, 1.0, 0.4); 
             const geo = new THREE.SphereGeometry(1, 48, 48); 
             const pos = geo.attributes.position;
@@ -232,7 +210,6 @@ export class AssetLoader {
             this.currentMesh.add(new THREE.Mesh(geo, mat));
         }
         else if (name === "Antibodies") {
-            // Y-Shape Protein
             const mat = getMat(0x00FF41);
             const geo = new THREE.CylinderGeometry(0.1, 0.1, 1, 8);
             const base = new THREE.Mesh(geo, mat); base.position.y = -0.5;
@@ -241,7 +218,6 @@ export class AssetLoader {
             this.currentMesh.add(base, arm1, arm2);
         }
         else if (name === "Virus") {
-            // Icosahedron (Geometric Virus)
             this.currentMesh.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.8, 0), getMat(0xFF0000)));
         }
 
@@ -255,7 +231,6 @@ export class AssetLoader {
         this.targetScale = 1;
     }
 
-    // --- HELPER: DNA/RNA ---
     buildHelix(isDouble) {
         const dnaGroup = new THREE.Group();
         const matBackbone = new THREE.MeshPhysicalMaterial({ color: 0x0088FF, metalness: 0.5 });
