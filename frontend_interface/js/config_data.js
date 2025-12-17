@@ -1,15 +1,20 @@
 // ==========================================
-// CONFIGURATION & DATA
+// CONFIGURATION & DATA ASSETS
 // ==========================================
 
+// Global Application State
 export const APP_STATE = { 
     gender: 'male', 
     category: 'home', 
     subCategory: null, 
     userProfile: null,
-    settings: { hq: true }
+    settings: {
+        hqRendering: true,
+        debugMode: false
+    }
 };
 
+// Menu Structure for Navigation (Matches HTML Buttons)
 export const SYSTEM_DATA = {
     nervous: [ { id: 'brain', title: 'Brain Model', desc: 'Cerebrum & Cerebellum' } ],
     circulation: [ { id: 'heart', title: 'Beating Heart', desc: 'Real-time Cardiac Rhythm' } ],
@@ -28,41 +33,42 @@ export const SYSTEM_DATA = {
     ]
 };
 
+// 3D Model Paths (Pointing to ./assets/)
 export const ASSETS = {
     male: {
-        home: './assets/body_base/human_male_full.glb',
-        brain: './assets/nervous/brain_male.glb',
-        skeleton: './assets/skeletal/male_human_skeleton.glb',
-        heart: './assets/circulation/beating_heart.glb',
-        long_bone: './assets/skeletal/long_bone.glb',
-        stomach: './assets/digestive/human_digestive_stomach.glb',
-        intestines: './assets/digestive/small_and_large_intestine.glb',
-        dna: './assets/genetic/dna.glb',
-        covid: './assets/immune/covid_19.glb',
-        antibody: './assets/immune/antibody.glb',
-        macrophage: './assets/immune/macrophage.glb',
-        t_cell: './assets/immune/t_cell.glb',
-        lymphocyte: './assets/immune/lymphocyte.glb',
-        monocyte: './assets/immune/monocyte.glb',
-        eosinophil: './assets/immune/eosinophil.glb',
-        basophil: './assets/immune/basophil.glb'
+        home: './assets/human_male_full.glb',
+        brain: './assets/brain_male.glb',
+        skeleton: './assets/male_human_skeleton.glb',
+        heart: './assets/beating_heart.glb',
+        long_bone: './assets/long_bone.glb',
+        stomach: './assets/human_digestive_stomach.glb',
+        intestines: './assets/small_and_large_intestine.glb',
+        dna: './assets/dna.glb',
+        covid: './assets/covid_19.glb',
+        antibody: './assets/antibody.glb',
+        macrophage: './assets/macrophage.glb',
+        t_cell: './assets/t_cell.glb',
+        lymphocyte: './assets/lymphocyte.glb',
+        monocyte: './assets/monocyte.glb',
+        eosinophil: './assets/eosinophil.glb',
+        basophil: './assets/basophil.glb'
     },
     female: {
-        home: './assets/body_base/human_female_full.glb',
-        brain: './assets/nervous/brain_female.glb',
-        skeleton: './assets/skeletal/female_human_skeleton.glb',
-        heart: './assets/circulation/beating_heart.glb',
-        long_bone: './assets/skeletal/long_bone.glb',
-        stomach: './assets/digestive/human_digestive_stomach.glb',
-        intestines: './assets/digestive/small_and_large_intestine.glb',
-        dna: './assets/genetic/dna.glb',
-        covid: './assets/immune/covid_19.glb',
-        antibody: './assets/immune/antibody.glb',
-        macrophage: './assets/immune/macrophage.glb',
-        t_cell: './assets/immune/t_cell.glb',
-        lymphocyte: './assets/immune/lymphocyte.glb',
-        monocyte: './assets/immune/monocyte.glb',
-        eosinophil: './assets/immune/eosinophil.glb',
-        basophil: './assets/immune/basophil.glb'
+        home: './assets/human_female_full.glb',
+        brain: './assets/brain_female.glb',
+        skeleton: './assets/female_human_skeleton.glb',
+        heart: './assets/beating_heart.glb',
+        long_bone: './assets/long_bone.glb',
+        stomach: './assets/human_digestive_stomach.glb',
+        intestines: './assets/small_and_large_intestine.glb',
+        dna: './assets/dna.glb',
+        covid: './assets/covid_19.glb',
+        antibody: './assets/antibody.glb',
+        macrophage: './assets/macrophage.glb',
+        t_cell: './assets/t_cell.glb',
+        lymphocyte: './assets/lymphocyte.glb',
+        monocyte: './assets/monocyte.glb',
+        eosinophil: './assets/eosinophil.glb',
+        basophil: './assets/basophil.glb'
     }
 };

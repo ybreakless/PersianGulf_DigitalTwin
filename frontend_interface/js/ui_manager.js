@@ -29,7 +29,7 @@ export function initUI() {
         loadModel(APP_STATE.category);
     };
 
-    // Attach Global Functions
+    // Attach Global Functions for HTML
     window.openSystemPage = openSystemPage;
     window.closeSystemPage = closeSystemPage;
     window.openModal = (id) => document.getElementById(`modal-${id}`).classList.remove('hidden');
@@ -51,7 +51,10 @@ function openSystemPage(systemId, systemName) {
             const btn = document.createElement('div');
             btn.className = 'sub-card ios-card';
             btn.style.animationDelay = `${index * 0.05}s`;
-            btn.innerHTML = `<div><h4>${item.title}</h4><p>${item.desc}</p></div><i class="fa-solid fa-chevron-right" style="opacity:0.3"></i>`;
+            btn.innerHTML = `
+                <div><h4>${item.title}</h4><p>${item.desc}</p></div>
+                <i class="fa-solid fa-chevron-right" style="opacity:0.3"></i>
+            `;
             btn.onclick = () => handleSubClick(systemId, item.id, btn);
             content.appendChild(btn);
         });
@@ -77,7 +80,7 @@ function handleSubClick(cat, sub, btn) {
     btn.classList.add('active');
     
     APP_STATE.subCategory = sub;
-    loadModel(cat);
+    loadModel(cat); 
     updateInfoPanelGeneric(sub, `Analyzing ${sub} details...`);
 }
 

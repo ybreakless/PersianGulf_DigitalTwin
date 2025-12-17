@@ -3,8 +3,8 @@
     --bg-main: #050505;
     --text-main: #ffffff;
     --text-dim: #8899ac;
-    --login-primary: #00f3ff;
-    --login-accent: #bc13fe;
+    --login-primary: #00f3ff; /* Cyan */
+    --login-accent: #bc13fe;  /* Purple */
     
     /* --- App Theme (iOS Glass - Dark Default) --- */
     --app-primary: #0a84ff;
@@ -14,14 +14,14 @@
     --ios-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     --ios-radius: 28px;
     
-    /* --- Gender Glow --- */
+    /* --- Gender Glows --- */
     --glow-male: #00f3ff;
     --glow-female: #ff00ff;
 }
 
 [data-theme="light"] {
     --bg-main: #f2f2f7;
-    --text-main: #1a1a1a;
+    --text-main: #1a1a1a; /* Dark text for visibility */
     --text-dim: #555555;
     --app-primary: #007aff;
     --ios-glass-bg: rgba(255, 255, 255, 0.75);

@@ -48,7 +48,7 @@ export function initAuth() {
         const id = document.getElementById('login-id').value;
         const pass = document.getElementById('login-pass').value;
         const btn = document.getElementById('btn-login');
-        const originalText = btn.innerHTML;
+        const originalText = btn.innerHTML; 
         
         btn.innerText = 'AUTHENTICATING...';
         
@@ -62,6 +62,8 @@ export function initAuth() {
                 syncGenderToggle(res.user.gender);
                 
                 authLayer.style.opacity = '0';
+                authLayer.style.transition = 'opacity 0.8s ease';
+                
                 setTimeout(() => {
                     authLayer.style.display = 'none';
                     appLayer.classList.remove('hidden');
@@ -106,8 +108,8 @@ export function initAuth() {
             }
         }, 800);
     });
-
-    // Expose these to window for HTML onclick events
+    
+    // Globals for HTML onclick attributes
     window.selectRegGender = function(gender) {
         document.getElementById('reg-sex').value = gender;
         const m = document.getElementById('reg-male-btn');
@@ -119,7 +121,14 @@ export function initAuth() {
     window.togglePass = function(id, btn) {
         const x = document.getElementById(id); 
         const i = btn.querySelector('i');
-        if (x.type === "password") { x.type = "text"; i.classList.replace('fa-eye', 'fa-eye-slash'); }
-        else { x.type = "password"; i.classList.replace('fa-eye-slash', 'fa-eye'); }
+        if (x.type === "password") { 
+            x.type = "text"; 
+            i.classList.remove('fa-eye'); 
+            i.classList.add('fa-eye-slash'); 
+        } else { 
+            x.type = "password"; 
+            i.classList.remove('fa-eye-slash'); 
+            i.classList.add('fa-eye'); 
+        }
     };
 }

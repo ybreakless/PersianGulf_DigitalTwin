@@ -1,7 +1,6 @@
-/* IMPORTS */
+/* IMPORTS - This pulls in all other files */
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
-/* MODULES */
 @import 'variables.css';
 @import 'components.css';
 @import 'auth_layer.css';
@@ -22,7 +21,7 @@ body, html {
 
 .hidden { display: none !important; opacity: 0; pointer-events: none; }
 
-/* Loader Overlay */
+/* LOADING SPINNER */
 #loader { 
     position: absolute; top: 50%; left: 50%; 
     transform: translate(-50%, -50%); 
@@ -30,6 +29,7 @@ body, html {
     color: var(--app-primary); 
     font-family: 'Rajdhani', sans-serif; 
     display: none; 
+    z-index: 200;
 }
 .spinner { 
     width: 40px; height: 40px; 

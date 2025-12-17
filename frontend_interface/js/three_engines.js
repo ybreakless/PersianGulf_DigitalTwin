@@ -12,8 +12,9 @@ export function init3D() {
     const container = document.getElementById('canvas-container');
     if (!container) return;
 
+    // Scene Setup
     scene = new THREE.Scene();
-    scene.background = null; // Transparent
+    scene.background = null; // Transparent for CSS gradient
 
     camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 100);
     camera.position.set(0, 1.5, 4.5);
@@ -41,19 +42,25 @@ export function init3D() {
     fillLight.position.set(0, 2, 5);
     scene.add(fillLight);
 
+    // Controls
     controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
 
-    // Start
-    loadModel('home');
-    animate();
+    // Listeners
     window.addEventListener('resize', onWindowResize);
+    
+    // Start Loop
+    animate();
+    
+    // Initial Load
+    loadModel('home');
 }
 
 export function loadModel(category) {
     let key = category;
     
+    // Determine which model key to use
     if (APP_STATE.subCategory) {
         key = APP_STATE.subCategory;
     } else if (category === 'nervous') key = 'brain';
@@ -74,6 +81,7 @@ export function loadModel(category) {
 
     if(loaderUI) loaderUI.style.display = 'block';
     
+    // Clean up old
     if(currentModel) {
         scene.remove(currentModel);
         currentModel.traverse(c => { 
@@ -93,20 +101,24 @@ export function loadModel(category) {
         
         // Apply Glassy Material (except home)
         if(category !== 'home') {
-            const mat = new THREE.MeshPhysicalMaterial({ 
-                color: 0xffffff, metalness: 0.2, roughness: 0.1, 
-                transmission: 0.3, opacity: 0.9, transparent: true, clearcoat: 1.0 
-            });
-            currentModel.traverse(c => { if(c.isMesh) c.material = mat; });
+            applyGlassMaterial(currentModel);
         }
         
         scene.add(currentModel);
         if(loaderUI) loaderUI.style.display = 'none';
         
     }, undefined, (e) => { 
-        console.error("Error loading:", path, e); 
+        console.error("[BioTwin] Error loading model:", path, e); 
         if(loaderUI) loaderUI.style.display = 'none'; 
     });
+}
+
+function applyGlassMaterial(model) {
+    const mat = new THREE.MeshPhysicalMaterial({ 
+        color: 0xffffff, metalness: 0.2, roughness: 0.1, 
+        transmission: 0.3, opacity: 0.9, transparent: true, clearcoat: 1.0 
+    });
+    model.traverse((child) => { if(child.isMesh) child.material = mat; });
 }
 
 export function update3DLighting(theme) {
