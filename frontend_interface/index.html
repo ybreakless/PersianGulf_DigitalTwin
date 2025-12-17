@@ -2,9 +2,8 @@
 <html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Y-314: BioTwin Interface | Ultimate Edition</title>
+    <title>Y-314: BioTwin Interface | WOOFWOOF ULTIMATE</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,14 +28,14 @@
                         <div class="logo-mark">🧬</div>
                         <div class="header-text">
                             <h2>ACCESS PORTAL</h2>
-                            <span class="version-tag">V.3.1.4_STABLE</span>
+                            <span class="version-tag">SYSTEM_READY</span>
                         </div>
                     </div>
 
                     <div id="login-view" class="view-section">
                         <div class="input-group">
                             <label><i class="fas fa-id-badge"></i> OPERATOR ID</label>
-                            <input type="text" id="login-id" placeholder="Enter Y-314 ID" autocomplete="off" class="cyber-input">
+                            <input type="text" id="login-id" placeholder="Enter Y-314 ID" class="cyber-input" autocomplete="off">
                         </div>
                         <div class="input-group">
                             <label><i class="fas fa-key"></i> PASSCODE</label>
@@ -55,7 +54,7 @@
                         </div>
                         
                         <div class="footer-text">
-                            <p>Unregistered Bio-Signature? <span id="go-to-register" style="cursor: pointer;">Create New Profile</span></p>
+                            <p>Unregistered Bio-Signature? <button id="go-to-register" class="link-btn">Create New Profile</button></p>
                         </div>
                     </div>
 
@@ -69,9 +68,7 @@
                                     <input type="text" id="reg-id" placeholder="Assign Operator ID" class="cyber-input">
                                     <div class="password-wrapper">
                                         <input type="password" id="reg-pass" placeholder="Set Password" class="cyber-input">
-                                        <button class="toggle-pass" onclick="togglePass('reg-pass', this)">
-                                            <i class="fa-solid fa-eye"></i>
-                                        </button>
+                                        <button class="toggle-pass" onclick="togglePass('reg-pass', this)"><i class="fa-solid fa-eye"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -87,10 +84,20 @@
                                     </button>
                                     <input type="hidden" id="reg-sex" value=""> 
                                 </div>
+
                                 <div class="grid-3 mt-10">
-                                    <div class="input-wrap"><input type="number" id="reg-height" placeholder="Height" class="cyber-input"><span class="unit">cm</span></div>
-                                    <div class="input-wrap"><input type="number" id="reg-weight" placeholder="Weight" class="cyber-input"><span class="unit">kg</span></div>
-                                    <div class="input-wrap"><input type="number" id="reg-fat" placeholder="Fat %" class="cyber-input"><span class="unit">%</span></div>
+                                    <div class="input-wrap">
+                                        <input type="number" id="reg-height" placeholder="Height" class="cyber-input">
+                                        <span class="unit">cm</span>
+                                    </div>
+                                    <div class="input-wrap">
+                                        <input type="number" id="reg-weight" placeholder="Weight" class="cyber-input">
+                                        <span class="unit">kg</span>
+                                    </div>
+                                    <div class="input-wrap">
+                                        <input type="number" id="reg-fat" placeholder="Fat %" class="cyber-input">
+                                        <span class="unit">%</span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -98,17 +105,37 @@
                                 <h4>02 // CARDIOVASCULAR</h4>
                                 <div class="grid-2">
                                     <div class="input-wrap"><input type="number" id="reg-hr" placeholder="Resting HR" class="cyber-input"><span class="unit">BPM</span></div>
-                                    <div class="input-wrap"><input type="number" id="reg-spo2" placeholder="SpO2" class="cyber-input"><span class="unit">%</span></div>
+                                    <div class="input-wrap"><input type="number" id="reg-spo2" placeholder="SpO2 Level" class="cyber-input"><span class="unit">%</span></div>
                                 </div>
                                 <input type="text" id="reg-bp" placeholder="BP (120/80)" class="cyber-input" style="margin-top:10px;">
                             </div>
 
                             <div class="form-block">
-                                <h4>03 // RESPIRATORY</h4>
+                                <h4>03 // RESPIRATORY SYSTEM</h4>
                                 <div class="grid-3">
-                                    <input type="number" id="reg-fvc" placeholder="FVC" class="cyber-input">
-                                    <input type="number" id="reg-pef" placeholder="PEF" class="cyber-input">
-                                    <input type="number" id="reg-rr" placeholder="RR" class="cyber-input">
+                                    <input type="number" id="reg-fvc" placeholder="FVC (L)" class="cyber-input">
+                                    <input type="number" id="reg-pef" placeholder="PEF (L/m)" class="cyber-input">
+                                    <input type="number" id="reg-rr" placeholder="RR (b/m)" class="cyber-input">
+                                </div>
+                            </div>
+
+                            <div class="form-block">
+                                <h4>04 // METABOLIC & CHEMICAL</h4>
+                                <div class="grid-3">
+                                    <input type="number" id="reg-temp" placeholder="Temp (°C)" class="cyber-input">
+                                    <input type="number" id="reg-glucose" placeholder="Glucose" class="cyber-input">
+                                    <input type="number" id="reg-hydration" placeholder="Hydration %" class="cyber-input">
+                                </div>
+                            </div>
+
+                            <div class="form-block">
+                                <h4>05 // DATA IMPORT</h4>
+                                <div class="upload-zone bubbly-zone" id="drop-zone">
+                                    <div class="bubble-icon">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                    </div>
+                                    <p class="upload-text"><strong>Drag & Drop</strong> Medical Files<br>or <span class="highlight">Click to Browse</span></p>
+                                    <input type="file" id="file-upload" class="hidden-input" multiple>
                                 </div>
                             </div>
 
@@ -141,7 +168,6 @@
     <div id="app-layer" class="hidden">
         
         <div id="canvas-container"></div>
-        
         <div id="loader">
             <div class="spinner"></div>
             <p>LOADING ASSETS...</p>
@@ -220,8 +246,11 @@
             <button class="back-btn ios-card" onclick="closeSystemPage()">
                 <i class="fa-solid fa-arrow-left"></i> Back to Menu
             </button>
+            
             <h2 id="sub-menu-title">System Name</h2>
-            <div class="sub-grid" id="sub-menu-content"></div>
+
+            <div class="sub-grid" id="sub-menu-content">
+                </div>
         </div>
 
         <div class="right-dashboard ios-card">
@@ -235,8 +264,42 @@
 
             <div class="dash-footer">
                 <div class="slider-group">
-                    <label style="font-size:10px; color:#888;">X-RAY OPACITY</label>
+                    <label>GLOBAL X-RAY OPACITY</label>
                     <input type="range" id="global-opacity" min="0" max="1" step="0.1" value="1">
+                </div>
+            </div>
+        </div>
+
+        <div class="manipulator-wrapper">
+            <button id="manipulator-toggle" class="manipulator-btn ios-card" title="Open Controls">
+                <i class="fa-solid fa-cubes"></i>
+            </button>
+            
+            <div id="manipulator-panel" class="manipulator-panel ios-card hidden">
+                <div class="panel-header-tiny">
+                    <span>MODEL MANIPULATOR</span>
+                    <button class="close-tiny" onclick="toggleManipulator()">
+                        <i class="fa-solid fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="manipulator-grid">
+                    <div class="tool-item">
+                        <label>Wireframe</label>
+                        <div class="toggle-switch" id="wireframe-toggle"></div>
+                    </div>
+                    <div class="tool-item">
+                        <label>Auto-Spin</label>
+                        <div class="toggle-switch active" id="spin-toggle"></div>
+                    </div>
+                    <div class="tool-item full">
+                        <label>Geometry Expansion</label>
+                        <input type="range" id="expansion-slider" min="0" max="1" step="0.01" value="0">
+                    </div>
+                    <div class="tool-item full">
+                        <label>Surface Roughness</label>
+                        <input type="range" id="roughness-slider" min="0" max="1" step="0.1" value="0.2">
+                    </div>
                 </div>
             </div>
         </div>
@@ -269,7 +332,7 @@
         }
     </script>
     <script>
-        // Inline Password Toggle Script to guarantee functionality
+        // Inline helpers to ensure UI works immediately
         function togglePass(id, btn) {
             const input = document.getElementById(id);
             const icon = btn.querySelector('i');
@@ -283,6 +346,10 @@
                 icon.classList.add('fa-eye');
             }
         }
+        function toggleManipulator() {
+            document.getElementById('manipulator-panel').classList.toggle('hidden');
+        }
+        document.getElementById('manipulator-toggle').addEventListener('click', toggleManipulator);
     </script>
     <script type="module" src="js/main.js"></script>
 </body>

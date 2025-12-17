@@ -3,12 +3,18 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // ==========================================
-// 1. DATA CONFIGURATION
+// 1. DATA & STATE
 // ==========================================
-const APP_STATE = { gender: 'male', category: 'home', subCategory: null, currentModel: null };
+const APP = { 
+    gender: 'male', 
+    category: 'home', 
+    subCategory: null, 
+    model: null, 
+    spin: true 
+};
 
-// Dynamic Dashboard Templates
-const DASHBOARD_TEMPLATES = {
+// DYNAMIC DASHBOARD TEMPLATES (The Right Panel Content)
+const DASH_TEMPLATES = {
     home: `
         <div class="sim-card">
             <h4>System Status</h4>
@@ -18,23 +24,25 @@ const DASHBOARD_TEMPLATES = {
             </div>
         </div>
         <div class="sim-card">
-            <h4>Quick Actions</h4>
-            <div class="control-row"><span>Full Scan</span><div class="toggle-switch active"></div></div>
-            <div class="control-row"><span>Auto-Rotate</span><div class="toggle-switch active"></div></div>
+            <h4>Actions</h4>
+            <div style="font-size:12px; margin-bottom:5px;">Full System Scan</div>
+            <div class="toggle-switch active"></div>
         </div>`,
+    
     nervous: `
         <div class="sim-card">
-            <h4>Brain Activity</h4>
+            <h4>Neural Activity</h4>
             <div class="metric-grid">
                 <div class="metric-box"><span class="metric-val">14 Hz</span><span class="metric-label">BETA WAVES</span></div>
                 <div class="metric-box"><span class="metric-val">Active</span><span class="metric-label">CORTEX</span></div>
             </div>
         </div>
         <div class="sim-card">
-            <h4>Neuro-Simulation</h4>
-            <div style="margin-bottom:8px; font-size:12px;">Synaptic Firing Rate</div>
+            <h4>Simulation</h4>
+            <div style="font-size:12px; margin-bottom:5px;">Synaptic Firing Rate</div>
             <input type="range" min="0" max="100" value="50">
         </div>`,
+    
     circulation: `
         <div class="sim-card">
             <h4>Cardiac Metrics</h4>
@@ -44,351 +52,261 @@ const DASHBOARD_TEMPLATES = {
             </div>
         </div>
         <div class="sim-card">
-            <h4>Pumping Simulation</h4>
-            <div class="control-row"><span>Adrenaline Rush</span><div class="toggle-switch"></div></div>
-            <div style="margin-bottom:8px; font-size:12px;">Heart Rate Control</div>
+            <h4>Stress Test</h4>
+            <div style="font-size:12px; margin-bottom:5px;">Heart Rate Control</div>
             <input type="range" min="40" max="180" value="72" oninput="document.getElementById('bpm-disp').innerText=this.value">
         </div>`,
+        
     genetic: `
         <div class="sim-card">
             <h4>DNA Sequencing</h4>
             <div class="metric-grid">
-                <div class="metric-box"><span class="metric-val">XX/XY</span><span class="metric-label">CHROMOSOME</span></div>
-                <div class="metric-box"><span class="metric-val">0.01%</span><span class="metric-label">MUTATION</span></div>
+                <div class="metric-box"><span class="metric-val">XY</span><span class="metric-label">TYPE</span></div>
+                <div class="metric-box"><span class="metric-val">0.02%</span><span class="metric-label">MUTATION</span></div>
             </div>
-        </div>
-        <div class="sim-card">
-            <h4>Helix Manipulation</h4>
-            <div class="control-row"><span>Unwind Strands</span><div class="toggle-switch"></div></div>
-            <div class="control-row"><span>Highlight Genes</span><div class="toggle-switch active"></div></div>
         </div>`
 };
 
+// SUB-MENU DATA
 const SYSTEM_DATA = {
-    nervous: [ { id: 'brain', title: 'Brain Model', desc: 'Cerebrum & Cerebellum' } ],
-    circulation: [ { id: 'heart', title: 'Beating Heart', desc: 'Real-time Cardiac Rhythm' } ],
-    skeletal: [ { id: 'skeleton', title: 'Full Skeleton', desc: 'Axial & Appendicular' }, { id: 'long_bone', title: 'Long Bone', desc: 'Femur/Humerus Analysis' } ],
-    digestive: [ { id: 'stomach', title: 'Stomach', desc: 'Gastric Anatomy' }, { id: 'intestines', title: 'Intestines', desc: 'Small & Large Tract' } ],
-    genetic: [ { id: 'dna', title: 'DNA Helix', desc: 'Double Helix Structure' } ],
-    immune: [ { id: 'covid', title: 'SARS-CoV-2', desc: 'Pathogen Visualization' } ]
+    nervous: [{id:'brain', title:'Brain', desc:'Cerebrum & Cerebellum'}],
+    circulation: [{id:'heart', title:'Heart', desc:'Cardiac Pump'}],
+    skeletal: [{id:'skeleton', title:'Skeleton', desc:'Bones Structure'}, {id:'long_bone', title:'Femur', desc:'Long Bone Analysis'}],
+    genetic: [{id:'dna', title:'DNA Helix', desc:'Genetic Code'}],
+    immune: [{id:'covid', title:'SARS-CoV-2', desc:'Pathogen Model'}],
+    digestive: [{id:'stomach', title:'Stomach', desc:'Gastric Anatomy'}]
 };
 
-// ASSETS (Corrected Paths)
+// ASSETS MAP (Must match your folder structure exactly)
 const ASSETS = {
-    male: {
-        home: './assets/human_male_full.glb',
-        brain: './assets/brain_male.glb',
-        skeleton: './assets/male_human_skeleton.glb',
-        heart: './assets/beating_heart.glb',
+    male: { 
+        home: './assets/human_male_full.glb', 
+        brain: './assets/brain_male.glb', 
+        heart: './assets/beating_heart.glb', 
+        dna: './assets/dna.glb', 
+        covid: './assets/covid_19.glb', 
+        skeleton: './assets/male_human_skeleton.glb', 
         stomach: './assets/human_digestive_stomach.glb',
-        dna: './assets/dna.glb',
-        covid: './assets/covid_19.glb'
+        long_bone: './assets/long_bone.glb'
     },
-    female: {
-        // Fixed typo: human_femlae_full -> human_female_full
-        home: './assets/human_female_full.glb',
-        brain: './assets/brain_female.glb',
-        skeleton: './assets/female_human_skeleton.glb',
-        heart: './assets/beating_heart.glb',
+    female: { 
+        home: './assets/human_female_full.glb', 
+        brain: './assets/brain_female.glb', 
+        heart: './assets/beating_heart.glb', 
+        dna: './assets/dna.glb', 
+        covid: './assets/covid_19.glb', 
+        skeleton: './assets/female_human_skeleton.glb', 
         stomach: './assets/human_digestive_stomach.glb',
-        dna: './assets/dna.glb',
-        covid: './assets/covid_19.glb'
+        long_bone: './assets/long_bone.glb'
     }
 };
 
 // ==========================================
-// 2. AUTH & LOGIC
+// 2. AUTHENTICATION LOGIC
 // ==========================================
-const Auth = {
-    KEY: 'y314_database',
-    getDB: function() { try { return JSON.parse(localStorage.getItem(this.KEY)) || []; } catch(e) { return []; } },
-    saveUser: function(userProfile) {
-        const db = this.getDB();
-        if (db.find(u => u.id === userProfile.id)) return { success: false, msg: 'ERROR: ID EXISTS' };
-        db.push(userProfile);
-        localStorage.setItem(this.KEY, JSON.stringify(db));
-        return { success: true, msg: 'PROFILE CREATED' };
-    },
-    authenticate: function(id, pass) {
-        const db = this.getDB();
-        const user = db.find(u => u.id === id && u.pass === pass);
-        if (user) return { success: true, user: user };
-        return { success: false, msg: 'INVALID CREDENTIALS' };
-    }
-};
-
-// UI Handlers
 const loginView = document.getElementById('login-view');
 const regView = document.getElementById('register-view');
-const authMsg = document.getElementById('auth-msg');
 
-document.getElementById('go-to-register').addEventListener('click', () => { loginView.classList.add('hidden'); regView.classList.remove('hidden'); authMsg.innerText = ''; });
-document.getElementById('btn-cancel').addEventListener('click', () => { regView.classList.add('hidden'); loginView.classList.remove('hidden'); authMsg.innerText = ''; });
+// Interactive Registry Button
+document.getElementById('go-to-register').addEventListener('click', (e) => {
+    e.preventDefault();
+    loginView.classList.add('hidden');
+    regView.classList.remove('hidden');
+});
 
-window.selectRegGender = function(gender) {
-    document.getElementById('reg-sex').value = gender;
-    document.getElementById('reg-male-btn').classList.toggle('active', gender === 'male');
-    document.getElementById('reg-female-btn').classList.toggle('active', gender === 'female');
-};
-
-document.getElementById('btn-register').addEventListener('click', () => {
-    const id = document.getElementById('reg-id').value;
-    const pass = document.getElementById('reg-pass').value;
-    const name = document.getElementById('reg-name').value;
-    const gender = document.getElementById('reg-sex').value;
-    
-    if (!id || !pass || !name) { authMsg.innerText = "ALL FIELDS REQUIRED"; authMsg.className = "msg-box msg-error"; return; }
-    if (!gender) { authMsg.innerText = "SELECT BIOLOGICAL PROFILE"; authMsg.className = "msg-box msg-error"; return; }
-
-    authMsg.innerText = "PROCESSING...";
-    setTimeout(() => {
-        const result = Auth.saveUser({ id, pass, name, gender });
-        if (result.success) {
-            authMsg.className = "msg-box msg-success"; authMsg.innerText = result.msg;
-            setTimeout(() => document.getElementById('btn-cancel').click(), 1000);
-        } else { authMsg.className = "msg-box msg-error"; authMsg.innerText = result.msg; }
-    }, 800);
+document.getElementById('btn-cancel').addEventListener('click', () => {
+    regView.classList.add('hidden');
+    loginView.classList.remove('hidden');
 });
 
 document.getElementById('btn-login').addEventListener('click', () => {
-    const id = document.getElementById('login-id').value;
-    const pass = document.getElementById('login-pass').value;
-    const btn = document.getElementById('btn-login');
-    btn.innerHTML = 'AUTHENTICATING...';
-    
+    // Fade out auth layer
+    document.getElementById('auth-layer').style.opacity = 0;
     setTimeout(() => {
-        const res = Auth.authenticate(id, pass);
-        if (res.success) {
-            APP_STATE.gender = res.user.gender;
-            document.getElementById('user-display').innerText = res.user.id.toUpperCase();
-            syncGenderToggle(res.user.gender);
-            
-            document.getElementById('auth-layer').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('auth-layer').style.display = 'none';
-                document.getElementById('app-layer').classList.remove('hidden');
-                init3D();
-            }, 800);
-        } else {
-            authMsg.innerText = res.msg; authMsg.className = "msg-box msg-error"; btn.innerHTML = 'INITIALIZE SESSION';
-        }
-    }, 1000);
+        document.getElementById('auth-layer').classList.add('hidden');
+        document.getElementById('app-layer').classList.remove('hidden');
+        init3D();
+    }, 500);
 });
 
 // ==========================================
-// 3. APP NAVIGATION & DASHBOARD
+// 3. UI & NAVIGATION
 // ==========================================
-const themeBtn = document.getElementById('theme-toggle');
-const htmlEl = document.documentElement;
-themeBtn.addEventListener('click', () => {
-    const next = htmlEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    htmlEl.setAttribute('data-theme', next);
-    const icon = themeBtn.querySelector('i');
-    icon.className = next === 'light' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
-    update3DLighting(next);
-});
-
-// Switch Main Categories (Home vs Systems)
-window.switchCategory = function(cat) {
-    APP_STATE.category = cat;
-    APP_STATE.subCategory = null;
+window.switchCategory = (cat) => {
+    APP.category = cat; 
+    APP.subCategory = null;
     
     // UI Updates
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-    document.querySelector(`button[onclick="switchCategory('${cat}')"]`)?.classList.add('active');
-    
-    // Close Submenu if going Home
-    if (cat === 'home') {
-        document.getElementById('sub-menu-layer').classList.add('hidden');
-        document.getElementById('main-nav-rail').classList.remove('hidden');
-    }
+    // Find button by onclick content
+    const btn = Array.from(document.querySelectorAll('.nav-item')).find(el => el.getAttribute('onclick')?.includes(cat));
+    if(btn) btn.classList.add('active');
 
-    loadModel(cat);
-    updateDashboard(cat);
+    // Close Submenu
+    document.getElementById('sub-menu-layer').classList.add('hidden');
+    document.getElementById('main-nav-rail').classList.remove('hidden');
+    
+    loadModel(cat); 
+    updateDash(cat);
 };
 
-window.openSystemPage = function(systemId, systemName) {
-    document.getElementById('main-nav-rail').classList.add('minimized'); // Hide rail
+window.openSystemPage = (sysId, sysName) => {
+    APP.category = sysId;
+    document.getElementById('main-nav-rail').classList.add('hidden');
+    
     const subLayer = document.getElementById('sub-menu-layer');
-    document.getElementById('sub-menu-title').innerText = systemName;
+    subLayer.classList.remove('hidden');
+    document.getElementById('sub-menu-title').innerText = sysName;
+    
     const content = document.getElementById('sub-menu-content');
-    content.innerHTML = ''; 
-
-    const items = SYSTEM_DATA[systemId];
-    if(items) {
-        items.forEach((item, index) => {
-            const btn = document.createElement('div');
-            btn.className = 'sim-card'; // Reuse sim-card style for sub-menu
-            btn.style.cursor = 'pointer'; btn.style.marginBottom = '10px';
-            btn.style.animationDelay = `${index * 0.05}s`;
-            btn.innerHTML = `<div><h4>${item.title}</h4><p style="font-size:12px;color:#888">${item.desc}</p></div>`;
-            btn.onclick = () => loadSubModel(systemId, item.id, btn);
-            content.appendChild(btn);
+    content.innerHTML = '';
+    
+    if(SYSTEM_DATA[sysId]) {
+        SYSTEM_DATA[sysId].forEach((item, i) => {
+            const el = document.createElement('div');
+            el.className = 'sim-card'; 
+            el.style.cursor = 'pointer'; 
+            el.style.animationDelay = (i * 0.1) + 's';
+            el.innerHTML = `<strong>${item.title}</strong><br><small style="color:#888">${item.desc}</small>`;
+            el.onclick = () => { APP.subCategory = item.id; loadModel(sysId); };
+            content.appendChild(el);
         });
     }
-    subLayer.classList.remove('hidden');
     
-    // Load default model for this system immediately
-    APP_STATE.category = systemId;
-    loadModel(systemId); 
-    updateDashboard(systemId);
+    loadModel(sysId);
+    updateDash(sysId);
 };
 
-window.closeSystemPage = function() {
+window.closeSystemPage = () => {
     document.getElementById('sub-menu-layer').classList.add('hidden');
-    setTimeout(() => { document.getElementById('main-nav-rail').classList.remove('minimized'); }, 100);
+    document.getElementById('main-nav-rail').classList.remove('hidden');
     window.switchCategory('home');
 };
 
-function loadSubModel(cat, sub, btn) {
-    document.querySelectorAll('.sim-card').forEach(b => b.style.borderColor = 'transparent');
-    btn.style.borderColor = '#00f3ff';
-    APP_STATE.subCategory = sub;
-    loadModel(cat);
-}
-
-function updateDashboard(category) {
-    const panel = document.getElementById('sim-control-panel');
-    const template = DASHBOARD_TEMPLATES[category] || DASHBOARD_TEMPLATES['home'];
-    panel.innerHTML = template;
+function updateDash(cat) {
+    document.getElementById('sim-control-panel').innerHTML = DASH_TEMPLATES[cat] || DASH_TEMPLATES.home;
 }
 
 // ==========================================
-// 4. 3D ENGINE
+// 4. THREE.JS ENGINE & MANIPULATOR
 // ==========================================
 let scene, camera, renderer, controls;
-const loaderUI = document.getElementById('loader');
-let keyLight, amb;
 
 function init3D() {
     const container = document.getElementById('canvas-container');
     scene = new THREE.Scene();
     
     camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 100);
-    camera.position.set(0, 1.5, 4.5);
+    camera.position.set(0, 1.5, 5);
     
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     container.appendChild(renderer.domElement);
 
-    amb = new THREE.AmbientLight(0xffffff, 0.6); scene.add(amb);
-    keyLight = new THREE.SpotLight(0x0a84ff, 25); keyLight.position.set(5, 8, 5); scene.add(keyLight);
+    const amb = new THREE.AmbientLight(0xffffff, 0.6); scene.add(amb);
+    const spot = new THREE.SpotLight(0x0a84ff, 15); spot.position.set(5, 10, 5); scene.add(spot);
     
     controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
-    
-    // Initial Load
+
     loadModel('home');
-    updateDashboard('home');
+    updateDash('home');
     animate();
-    
-    window.addEventListener('resize', () => { 
-        camera.aspect = window.innerWidth/window.innerHeight; 
-        camera.updateProjectionMatrix(); 
-        renderer.setSize(window.innerWidth, window.innerHeight); 
+
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth/window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
     });
 }
 
-function loadModel(category) {
-    // 1. Determine Key
-    let key = category;
-    if (APP_STATE.subCategory) key = APP_STATE.subCategory;
+function loadModel(cat) {
+    // 1. Resolve Key
+    let key = APP.subCategory ? APP.subCategory : cat;
     
-    // Mapping Fallbacks if simple key doesn't match
-    if (category === 'nervous' && !APP_STATE.subCategory) key = 'brain';
-    if (category === 'skeletal' && !APP_STATE.subCategory) key = 'skeleton';
-    if (category === 'circulation' && !APP_STATE.subCategory) key = 'heart';
-    if (category === 'genetic' && !APP_STATE.subCategory) key = 'dna';
-    if (category === 'immune' && !APP_STATE.subCategory) key = 'covid';
-    if (category === 'digestive' && !APP_STATE.subCategory) key = 'stomach';
+    // Fallback mappings
+    if(cat==='nervous' && !APP.subCategory) key='brain';
+    if(cat==='circulation' && !APP.subCategory) key='heart';
+    if(cat==='genetic' && !APP.subCategory) key='dna';
+    if(cat==='skeletal' && !APP.subCategory) key='skeleton';
+    if(cat==='immune' && !APP.subCategory) key='covid';
+    if(cat==='digestive' && !APP.subCategory) key='stomach';
 
-    // 2. Get Path from Gender Asset Map
-    const path = ASSETS[APP_STATE.gender][key];
-    
-    if(!path) { 
-        console.warn("Missing asset config for:", key); 
-        return; 
-    }
+    const path = ASSETS[APP.gender][key];
+    if(!path) return console.warn("Asset not found:", key);
 
+    // 2. Clear Old Model (Ghost Fix)
+    const loaderUI = document.getElementById('loader');
     loaderUI.style.display = 'block';
 
-    // 3. REMOVE PREVIOUS MODEL (Crucial Fix)
-    if(APP_STATE.currentModel) {
-        scene.remove(APP_STATE.currentModel);
-        
-        // Clean up memory
-        APP_STATE.currentModel.traverse((child) => {
-            if (child.isMesh) {
-                child.geometry.dispose();
-                if (child.material) child.material.dispose();
-            }
-        });
-        APP_STATE.currentModel = null;
+    if(APP.model) {
+        scene.remove(APP.model);
+        APP.model.traverse(o=>{ if(o.isMesh){ o.geometry.dispose(); if(o.material)o.material.dispose(); } });
+        APP.model = null;
     }
 
-    // 4. Load New
+    // 3. Load New
     new GLTFLoader().load(path, (gltf) => {
-        APP_STATE.currentModel = gltf.scene;
+        APP.model = gltf.scene;
         
-        const box = new THREE.Box3().setFromObject(APP_STATE.currentModel);
+        // Center
+        const box = new THREE.Box3().setFromObject(APP.model);
         const center = box.getCenter(new THREE.Vector3());
-        APP_STATE.currentModel.position.x -= center.x;
-        APP_STATE.currentModel.position.y -= center.y;
-        APP_STATE.currentModel.position.z -= center.z;
-        
-        // Apply Glass Material if organ
-        if(category !== 'home') {
-            const mat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, metalness: 0.2, roughness: 0.1, transmission: 0.3, opacity: 0.9, transparent: true });
-            APP_STATE.currentModel.traverse(c => { if(c.isMesh) c.material = mat; });
+        APP.model.position.sub(center);
+
+        // Glass Material for Organs
+        if(cat !== 'home') {
+             const mat = new THREE.MeshPhysicalMaterial({
+                color: 0xffffff, metalness: 0.2, roughness: 0.2, transmission: 0.5, transparent: true
+            });
+            APP.model.traverse(o => { if(o.isMesh) o.material = mat; });
         }
         
-        scene.add(APP_STATE.currentModel);
+        scene.add(APP.model);
         loaderUI.style.display = 'none';
-    }, undefined, (error) => { 
-        console.error("ERROR LOADING MODEL:", path);
+        
+        // Reset Manipulators
+        document.getElementById('expansion-slider').value = 0;
+        
+    }, undefined, (err) => { 
+        console.error(err); 
         loaderUI.style.display = 'none'; 
     });
 }
 
-function update3DLighting(theme) {
-    if(theme === 'light') { keyLight.color.setHex(0x007aff); amb.intensity = 1.0; }
-    else { keyLight.color.setHex(0x0a84ff); amb.intensity = 0.6; }
+function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+    if(APP.model && APP.spin) APP.model.rotation.y += 0.005;
+    renderer.render(scene, camera);
 }
 
-function animate() { requestAnimationFrame(animate); controls.update(); renderer.render(scene, camera); }
-
-function syncGenderToggle(sex) {
-    const m = document.getElementById('btn-male'), f = document.getElementById('btn-female');
-    if(sex === 'male') { m.classList.add('active'); f.classList.remove('active'); }
-    else { f.classList.add('active'); m.classList.remove('active'); }
-}
-
-document.getElementById('btn-male').onclick = () => { 
-    APP_STATE.gender = 'male'; 
-    syncGenderToggle('male'); 
-    loadModel(APP_STATE.category); 
+// --- MANIPULATOR LOGIC (WOOFWOOF) ---
+document.getElementById('wireframe-toggle').onclick = (e) => {
+    e.target.classList.toggle('active');
+    const isWire = e.target.classList.contains('active');
+    if(APP.model) APP.model.traverse(o => { if(o.isMesh && o.material) o.material.wireframe = isWire; });
 };
 
-document.getElementById('btn-female').onclick = () => { 
-    APP_STATE.gender = 'female'; 
-    syncGenderToggle('female'); 
-    loadModel(APP_STATE.category); 
+document.getElementById('spin-toggle').onclick = (e) => {
+    e.target.classList.toggle('active');
+    APP.spin = e.target.classList.contains('active');
 };
 
-window.openModal = (id) => console.log("Open Modal", id);
+document.getElementById('expansion-slider').oninput = (e) => {
+    const s = 1 + parseFloat(e.target.value);
+    if(APP.model) APP.model.scale.set(s,s,s);
+};
+
+document.getElementById('roughness-slider').oninput = (e) => {
+    const val = parseFloat(e.target.value);
+    if(APP.model) APP.model.traverse(o => { if(o.isMesh && o.material) o.material.roughness = val; });
+};
+
+// Gender Logic
+document.getElementById('btn-male').onclick = () => { APP.gender='male'; loadModel(APP.category); document.getElementById('btn-male').classList.add('active'); document.getElementById('btn-female').classList.remove('active'); };
+document.getElementById('btn-female').onclick = () => { APP.gender='female'; loadModel(APP.category); document.getElementById('btn-female').classList.add('active'); document.getElementById('btn-male').classList.remove('active'); };
+
+// Reset Camera
 window.resetCam = () => controls.reset();
-document.getElementById('btn-logout').onclick = () => location.reload();
-
-// Global Opacity Slider Logic
-document.getElementById('global-opacity').addEventListener('input', (e) => {
-    if(APP_STATE.currentModel) {
-        APP_STATE.currentModel.traverse((child) => {
-            if(child.isMesh) {
-                child.material.transparent = true;
-                child.material.opacity = e.target.value;
-            }
-        });
-    }
-});
