@@ -9,7 +9,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link rel="stylesheet" href="css/style.css">
@@ -37,12 +36,12 @@
                     <div id="login-view" class="view-section">
                         <div class="input-group">
                             <label><i class="fas fa-id-badge"></i> OPERATOR ID</label>
-                            <input type="text" id="login-id" placeholder="Enter Y-314 ID" autocomplete="off">
+                            <input type="text" id="login-id" placeholder="Enter Y-314 ID" autocomplete="off" class="cyber-input">
                         </div>
                         <div class="input-group">
                             <label><i class="fas fa-key"></i> PASSCODE</label>
                             <div class="password-wrapper">
-                                <input type="password" id="login-pass" placeholder="••••••••••••">
+                                <input type="password" id="login-pass" placeholder="••••••••••••" class="cyber-input">
                                 <button class="toggle-pass" onclick="togglePass('login-pass', this)">
                                     <i class="fa-solid fa-eye"></i>
                                 </button>
@@ -56,7 +55,7 @@
                         </div>
                         
                         <div class="footer-text">
-                            <p>Unregistered Bio-Signature? <span id="go-to-register">Create New Profile</span></p>
+                            <p>Unregistered Bio-Signature? <span id="go-to-register" style="cursor: pointer;">Create New Profile</span></p>
                         </div>
                     </div>
 
@@ -88,20 +87,10 @@
                                     </button>
                                     <input type="hidden" id="reg-sex" value=""> 
                                 </div>
-
                                 <div class="grid-3 mt-10">
-                                    <div class="input-wrap">
-                                        <input type="number" id="reg-height" placeholder="Height" class="cyber-input">
-                                        <span class="unit">cm</span>
-                                    </div>
-                                    <div class="input-wrap">
-                                        <input type="number" id="reg-weight" placeholder="Weight" class="cyber-input">
-                                        <span class="unit">kg</span>
-                                    </div>
-                                    <div class="input-wrap">
-                                        <input type="number" id="reg-fat" placeholder="Fat %" class="cyber-input">
-                                        <span class="unit">%</span>
-                                    </div>
+                                    <div class="input-wrap"><input type="number" id="reg-height" placeholder="Height" class="cyber-input"><span class="unit">cm</span></div>
+                                    <div class="input-wrap"><input type="number" id="reg-weight" placeholder="Weight" class="cyber-input"><span class="unit">kg</span></div>
+                                    <div class="input-wrap"><input type="number" id="reg-fat" placeholder="Fat %" class="cyber-input"><span class="unit">%</span></div>
                                 </div>
                             </div>
 
@@ -109,47 +98,17 @@
                                 <h4>02 // CARDIOVASCULAR</h4>
                                 <div class="grid-2">
                                     <div class="input-wrap"><input type="number" id="reg-hr" placeholder="Resting HR" class="cyber-input"><span class="unit">BPM</span></div>
-                                    <div class="input-wrap"><input type="number" id="reg-spo2" placeholder="SpO2 Level" class="cyber-input"><span class="unit">%</span></div>
-                                    <input type="text" id="reg-bp" placeholder="BP (120/80)" class="cyber-input">
-                                    <select id="reg-ecg" class="cyber-input">
-                                        <option value="Normal">Normal Sinus Rhythm</option>
-                                        <option value="Arrhythmia">Arrhythmia Detected</option>
-                                        <option value="Unknown">Not Measured</option>
-                                    </select>
+                                    <div class="input-wrap"><input type="number" id="reg-spo2" placeholder="SpO2" class="cyber-input"><span class="unit">%</span></div>
                                 </div>
+                                <input type="text" id="reg-bp" placeholder="BP (120/80)" class="cyber-input" style="margin-top:10px;">
                             </div>
 
                             <div class="form-block">
-                                <h4>03 // RESPIRATORY SYSTEM</h4>
+                                <h4>03 // RESPIRATORY</h4>
                                 <div class="grid-3">
-                                    <input type="number" id="reg-fvc" placeholder="FVC (L)" class="cyber-input">
-                                    <input type="number" id="reg-pef" placeholder="PEF (L/m)" class="cyber-input">
-                                    <input type="number" id="reg-rr" placeholder="RR (b/m)" class="cyber-input">
-                                </div>
-                            </div>
-
-                            <div class="form-block">
-                                <h4>04 // METABOLIC & CHEMICAL</h4>
-                                <div class="grid-3">
-                                    <input type="number" id="reg-temp" placeholder="Temp (°C)" class="cyber-input">
-                                    <input type="number" id="reg-glucose" placeholder="Glucose (mg/dL)" class="cyber-input">
-                                    <input type="number" id="reg-hydration" placeholder="Hydration %" class="cyber-input">
-                                </div>
-                            </div>
-
-                            <div class="form-block">
-                                <h4>05 // DATA IMPORT</h4>
-                                <div class="upload-area">
-                                    <div class="file-box">
-                                        <i class="fas fa-camera"></i>
-                                        <label>Photo</label>
-                                        <input type="file" id="upload-photo" accept="image/*">
-                                    </div>
-                                    <div class="file-box">
-                                        <i class="fas fa-file-csv"></i>
-                                        <label>.CSV</label>
-                                        <input type="file" id="upload-csv" accept=".csv">
-                                    </div>
+                                    <input type="number" id="reg-fvc" placeholder="FVC" class="cyber-input">
+                                    <input type="number" id="reg-pef" placeholder="PEF" class="cyber-input">
+                                    <input type="number" id="reg-rr" placeholder="RR" class="cyber-input">
                                 </div>
                             </div>
 
@@ -182,6 +141,7 @@
     <div id="app-layer" class="hidden">
         
         <div id="canvas-container"></div>
+        
         <div id="loader">
             <div class="spinner"></div>
             <p>LOADING ASSETS...</p>
@@ -214,7 +174,7 @@
 
         <div class="nav-rail" id="main-nav-rail">
             
-            <button class="nav-item active ios-card" data-target="home">
+            <button class="nav-item active ios-card" onclick="switchCategory('home')">
                 <div class="icon-bubble gray"><i class="fa-solid fa-house"></i></div>
                 <span class="label">Overview</span>
             </button>
@@ -260,24 +220,23 @@
             <button class="back-btn ios-card" onclick="closeSystemPage()">
                 <i class="fa-solid fa-arrow-left"></i> Back to Menu
             </button>
-            
             <h2 id="sub-menu-title">System Name</h2>
-
-            <div class="sub-grid" id="sub-menu-content">
-                </div>
+            <div class="sub-grid" id="sub-menu-content"></div>
         </div>
 
-        <div class="info-panel ios-card">
-            <div class="panel-header-small">
-                <h3>LIVE ANALYSIS</h3>
+        <div class="right-dashboard ios-card">
+            <div class="dash-header">
+                <h3>SIMULATION DECK</h3>
+                <div class="live-badge">LIVE</div>
             </div>
-            <div class="panel-body">
-                <div class="data-row">
-                    <span class="label">ACTIVE VIEW</span>
-                    <span id="info-view" class="value">FULL BODY</span>
+            
+            <div class="dash-content custom-scrollbar" id="sim-control-panel">
                 </div>
-                <div class="desc-box">
-                    <p id="info-desc">Initializing full systemic scan. Waiting for input...</p>
+
+            <div class="dash-footer">
+                <div class="slider-group">
+                    <label style="font-size:10px; color:#888;">X-RAY OPACITY</label>
+                    <input type="range" id="global-opacity" min="0" max="1" step="0.1" value="1">
                 </div>
             </div>
         </div>
@@ -290,7 +249,7 @@
             <div class="divider-vert"></div>
             <div class="control-unit wide">
                 <i class="fa-solid fa-minus small-icon"></i>
-                <input type="range" id="range-zoom" min="10" max="100" value="50">
+                <input type="range" id="range-zoom" min="2" max="10" step="0.1" value="4.5">
                 <i class="fa-solid fa-plus small-icon"></i>
             </div>
             <div class="divider-vert"></div>
@@ -299,34 +258,18 @@
             </button>
         </div>
 
-        <div id="modal-settings" class="modal-backdrop hidden">
-            <div class="modal-card ios-card">
-                <div class="modal-header">
-                    <h3>Settings</h3>
-                    <button onclick="closeModal('settings')"><i class="fas fa-times"></i></button>
-                </div>
-                <div class="modal-body">
-                    <div class="setting-row">
-                        <span>High Quality Rendering</span>
-                        <input type="checkbox" checked>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
 
     <script type="importmap">
         {
             "imports": {
                 "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
-                "lil-gui": "https://unpkg.com/lil-gui@0.19.1/dist/lil-gui.esm.min.js"
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
             }
         }
     </script>
     <script>
-        // Password toggle logic inline to ensure it works
+        // Inline Password Toggle Script to guarantee functionality
         function togglePass(id, btn) {
             const input = document.getElementById(id);
             const icon = btn.querySelector('i');
