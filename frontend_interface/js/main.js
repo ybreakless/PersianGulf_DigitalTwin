@@ -3,7 +3,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import GUI from 'lil-gui'; 
 
+// ==========================================
 // 1. DATA CONFIGURATION
+// ==========================================
 const APP_STATE = { gender: 'male', category: 'home', subCategory: null, userProfile: null };
 
 const SYSTEM_DATA = {
@@ -24,7 +26,9 @@ const SYSTEM_DATA = {
     ]
 };
 
-// 2. ASSET MAPPING (Pointing to ./assets/)
+// ==========================================
+// 2. ASSET MAPPING (Directly in ./assets/)
+// ==========================================
 const ASSETS = {
     male: {
         home: './assets/human_male_full.glb',
@@ -64,7 +68,9 @@ const ASSETS = {
     }
 };
 
+// ==========================================
 // 3. AUTH & LOGIC
+// ==========================================
 const Auth = {
     KEY: 'y314_database',
     getDB: function() { try { return JSON.parse(localStorage.getItem(this.KEY)) || []; } catch(e) { return []; } },
@@ -141,7 +147,9 @@ document.getElementById('btn-login').addEventListener('click', () => {
     }, 1000);
 });
 
+// ==========================================
 // 4. APP NAVIGATION & 3D
+// ==========================================
 const themeBtn = document.getElementById('theme-toggle');
 const htmlEl = document.documentElement;
 themeBtn.addEventListener('click', () => {
@@ -228,8 +236,9 @@ function loadModel(category) {
     else if (category === 'genetic') key = 'dna';
     else if (category === 'immune') key = 'covid'; 
 
+    // NOTICE: Using ./assets/ directly
     const path = ASSETS[APP_STATE.gender][key];
-    if(!path) { console.warn("Missing asset:", key); return; }
+    if(!path) { console.warn("Missing asset config for:", key); return; }
 
     loaderUI.style.display = 'block';
     if(currentModel) scene.remove(currentModel);
@@ -248,7 +257,11 @@ function loadModel(category) {
         }
         scene.add(currentModel);
         loaderUI.style.display = 'none';
-    }, undefined, () => loaderUI.style.display = 'none');
+    }, undefined, (error) => { 
+        console.error("ERROR LOADING MODEL:", path);
+        console.error(error); 
+        loaderUI.style.display = 'none'; 
+    });
 }
 
 function update3DLighting(theme) {
