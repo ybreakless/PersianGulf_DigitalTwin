@@ -2,12 +2,14 @@
 <html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Y-314: BioTwin Interface | WOOFWOOF ULTIMATE</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link rel="stylesheet" href="css/style.css">
@@ -15,8 +17,10 @@
 <body>
 
     <div id="auth-layer">
+        
         <div class="bg-noise"></div>
-        <div class="bg-gradient-orb"></div>
+        <div class="bg-gradient-orb top-left"></div>
+        <div class="bg-gradient-orb bottom-right"></div>
         <div class="grid-overlay"></div>
 
         <div class="split-container">
@@ -25,20 +29,27 @@
                 <div class="glass-panel ultra-glass">
                     
                     <div class="panel-header">
-                        <div class="logo-mark">🧬</div>
-                        <div class="header-text">
-                            <h2>ACCESS PORTAL</h2>
-                            <span class="version-tag">SYSTEM_READY</span>
+                        <div class="header-left">
+                            <div class="logo-mark">🧬</div>
+                            <div class="header-text">
+                                <h2>ACCESS PORTAL</h2>
+                                <span class="version-tag">SYSTEM_READY // V.4.1</span>
+                            </div>
                         </div>
+                        <button id="login-theme-toggle" class="icon-btn-small" title="Toggle Light/Dark Mode">
+                            <i class="fa-solid fa-sun"></i>
+                        </button>
                     </div>
 
                     <div id="login-view" class="view-section">
+                        
                         <div class="input-group">
-                            <label><i class="fas fa-id-badge"></i> OPERATOR ID</label>
+                            <label for="login-id"><i class="fas fa-id-badge"></i> OPERATOR ID</label>
                             <input type="text" id="login-id" placeholder="Enter Y-314 ID" class="cyber-input" autocomplete="off">
                         </div>
+                        
                         <div class="input-group">
-                            <label><i class="fas fa-key"></i> PASSCODE</label>
+                            <label for="login-pass"><i class="fas fa-key"></i> PASSCODE</label>
                             <div class="password-wrapper">
                                 <input type="password" id="login-pass" placeholder="••••••••••••" class="cyber-input">
                                 <button class="toggle-pass" onclick="togglePass('login-pass', this)">
@@ -50,15 +61,26 @@
                         <div class="auth-actions">
                             <button id="btn-login" class="neon-btn primary">
                                 <span class="btn-content">INITIALIZE SESSION</span>
+                                <div class="btn-glow"></div>
                             </button>
                         </div>
                         
                         <div class="footer-text">
                             <p>Unregistered Bio-Signature? <button id="go-to-register" class="link-btn">Create New Profile</button></p>
                         </div>
+                        
+                        <div id="login-feedback" class="feedback-msg hidden"></div>
                     </div>
 
                     <div id="register-view" class="view-section hidden">
+                        
+                        <div class="reg-header-row">
+                            <button id="btn-back-login" class="back-icon-btn" title="Abort Registration">
+                                <i class="fa-solid fa-arrow-left"></i>
+                            </button>
+                            <h3>NEW PROFILE REGISTRATION</h3>
+                        </div>
+
                         <div class="scroll-wrapper custom-scrollbar">
                             
                             <div class="form-block">
@@ -68,7 +90,9 @@
                                     <input type="text" id="reg-id" placeholder="Assign Operator ID" class="cyber-input">
                                     <div class="password-wrapper">
                                         <input type="password" id="reg-pass" placeholder="Set Password" class="cyber-input">
-                                        <button class="toggle-pass" onclick="togglePass('reg-pass', this)"><i class="fa-solid fa-eye"></i></button>
+                                        <button class="toggle-pass" onclick="togglePass('reg-pass', this)">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -76,10 +100,10 @@
                             <div class="form-block">
                                 <h4>01 // BIOLOGICAL PROFILE</h4>
                                 <div class="gender-selector-container">
-                                    <button class="gender-select-btn male" id="reg-male-btn" onclick="selectRegGender('male')">
+                                    <button class="gender-select-btn male" id="reg-male-btn">
                                         <i class="fas fa-mars"></i> MALE
                                     </button>
-                                    <button class="gender-select-btn female" id="reg-female-btn" onclick="selectRegGender('female')">
+                                    <button class="gender-select-btn female" id="reg-female-btn">
                                         <i class="fas fa-venus"></i> FEMALE
                                     </button>
                                     <input type="hidden" id="reg-sex" value=""> 
@@ -104,8 +128,14 @@
                             <div class="form-block">
                                 <h4>02 // CARDIOVASCULAR</h4>
                                 <div class="grid-2">
-                                    <div class="input-wrap"><input type="number" id="reg-hr" placeholder="Resting HR" class="cyber-input"><span class="unit">BPM</span></div>
-                                    <div class="input-wrap"><input type="number" id="reg-spo2" placeholder="SpO2 Level" class="cyber-input"><span class="unit">%</span></div>
+                                    <div class="input-wrap">
+                                        <input type="number" id="reg-hr" placeholder="Resting HR" class="cyber-input">
+                                        <span class="unit">BPM</span>
+                                    </div>
+                                    <div class="input-wrap">
+                                        <input type="number" id="reg-spo2" placeholder="SpO2 Level" class="cyber-input">
+                                        <span class="unit">%</span>
+                                    </div>
                                 </div>
                                 <input type="text" id="reg-bp" placeholder="BP (120/80)" class="cyber-input" style="margin-top:10px;">
                             </div>
@@ -134,15 +164,15 @@
                                     <div class="bubble-icon">
                                         <i class="fas fa-cloud-upload-alt"></i>
                                     </div>
-                                    <p class="upload-text"><strong>Drag & Drop</strong> Medical Files<br>or <span class="highlight">Click to Browse</span></p>
+                                    <p class="upload-text">
+                                        <strong>Drag & Drop</strong> Medical Files<br>
+                                        or <span class="highlight">Click to Browse</span>
+                                    </p>
                                     <input type="file" id="file-upload" class="hidden-input" multiple>
                                 </div>
                             </div>
 
-                        </div> 
-                        
-                        <div class="action-buttons">
-                            <button id="btn-cancel" class="text-btn">ABORT REGISTRATION</button>
+                        </div> <div class="action-buttons">
                             <button id="btn-register" class="neon-btn secondary">CONFIRM ENTRY</button>
                         </div>
                     </div>
@@ -168,12 +198,14 @@
     <div id="app-layer" class="hidden">
         
         <div id="canvas-container"></div>
+        
         <div id="loader">
             <div class="spinner"></div>
-            <p>LOADING ASSETS...</p>
+            <p>INITIALIZING ASSETS...</p>
         </div>
 
         <div class="floating-hud">
+            
             <div class="hud-left">
                 <span class="hud-brand">Y-314 OS</span>
             </div>
@@ -186,15 +218,40 @@
             </div>
 
             <div class="hud-right">
-                <button id="theme-toggle" class="icon-btn" title="Toggle Theme">
+                <button id="app-theme-toggle" class="icon-btn" title="Toggle Theme">
                     <i class="fa-solid fa-sun"></i>
                 </button>
-                <button class="icon-btn" onclick="openModal('settings')" title="Settings">
+                <button class="icon-btn" onclick="openSettings()" title="Settings">
                     <i class="fa-solid fa-gear"></i>
                 </button>
                 <button id="btn-logout" class="icon-btn alert" title="Logout">
                     <i class="fa-solid fa-power-off"></i>
                 </button>
+            </div>
+        </div>
+
+        <div id="settings-modal" class="modal-overlay hidden">
+            <div class="settings-card ios-card">
+                <div class="settings-header">
+                    <h3>SYSTEM CONFIG</h3>
+                    <button class="close-tiny" onclick="closeSettings()">
+                        <i class="fa-solid fa-times"></i>
+                    </button>
+                </div>
+                <div class="settings-body">
+                    <div class="settings-row">
+                        <span>High Quality Shaders</span>
+                        <div class="toggle-switch active" id="set-quality"></div>
+                    </div>
+                    <div class="settings-row">
+                        <span>Show Tooltips</span>
+                        <div class="toggle-switch active"></div>
+                    </div>
+                    <div class="settings-row" style="flex-direction:column; align-items:flex-start; gap:10px;">
+                        <span>Rotation Speed</span>
+                        <input type="range" id="set-speed" min="0" max="10" value="5">
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -264,7 +321,7 @@
 
             <div class="dash-footer">
                 <div class="slider-group">
-                    <label>GLOBAL X-RAY OPACITY</label>
+                    <label style="font-size:10px; color:var(--text-dim);">GLOBAL X-RAY OPACITY</label>
                     <input type="range" id="global-opacity" min="0" max="1" step="0.1" value="1">
                 </div>
             </div>
@@ -306,8 +363,12 @@
 
         <div class="bottom-dock ios-card">
             <div class="gender-toggle">
-                <button id="btn-male" class="gender-btn active" title="Load Male Model"><i class="fa-solid fa-mars"></i></button>
-                <button id="btn-female" class="gender-btn" title="Load Female Model"><i class="fa-solid fa-venus"></i></button>
+                <button id="btn-male" class="gender-btn active" title="Load Male Model">
+                    <i class="fa-solid fa-mars"></i>
+                </button>
+                <button id="btn-female" class="gender-btn" title="Load Female Model">
+                    <i class="fa-solid fa-venus"></i>
+                </button>
             </div>
             <div class="divider-vert"></div>
             <div class="control-unit wide">
@@ -331,8 +392,8 @@
             }
         }
     </script>
+    
     <script>
-        // Inline helpers to ensure UI works immediately
         function togglePass(id, btn) {
             const input = document.getElementById(id);
             const icon = btn.querySelector('i');
@@ -346,11 +407,21 @@
                 icon.classList.add('fa-eye');
             }
         }
+        
         function toggleManipulator() {
             document.getElementById('manipulator-panel').classList.toggle('hidden');
         }
-        document.getElementById('manipulator-toggle').addEventListener('click', toggleManipulator);
+        
+        function openSettings() { document.getElementById('settings-modal').classList.remove('hidden'); }
+        function closeSettings() { document.getElementById('settings-modal').classList.add('hidden'); }
+        
+        // Ensure buttons exist before attaching listener (Safety check)
+        document.addEventListener('DOMContentLoaded', () => {
+            const manTog = document.getElementById('manipulator-toggle');
+            if(manTog) manTog.addEventListener('click', toggleManipulator);
+        });
     </script>
+    
     <script type="module" src="js/main.js"></script>
 </body>
 </html>
