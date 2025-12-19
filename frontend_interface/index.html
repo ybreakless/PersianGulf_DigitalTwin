@@ -2,13 +2,12 @@
 <html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Y-314: BioTwin Interface | WOOFWOOF ULTIMATE</title>
+    <title>Y-314: Persian Gulf V3.0 [LEVIATHAN]</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Rajdhani:wght@500;600;700;800&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -16,39 +15,40 @@
 </head>
 <body>
 
+    <canvas id="pixel-canvas"></canvas>
+
     <div id="auth-layer">
         
-        <div class="bg-noise"></div>
-        <div class="bg-gradient-orb"></div>
         <div class="grid-overlay"></div>
+        <div class="bg-noise"></div>
+        
+        <button id="login-theme-toggle" class="fixed-theme-btn" title="Toggle Light/Dark Mode">
+            <i class="fa-solid fa-circle-half-stroke"></i>
+        </button>
 
         <div class="split-container">
             
             <div class="form-side">
-                <div class="glass-panel ultra-glass">
+                <div class="glass-panel ultra-glass bubble-anim">
                     
                     <div class="panel-header">
                         <div class="header-left">
-                            <div class="logo-mark">🧬</div>
-                            <div class="header-text">
-                                <h2>ACCESS PORTAL</h2>
-                                <span class="version-tag">SYSTEM_READY</span>
+                            <div class="logo-mark"><i class="fa-solid fa-dna"></i></div>
+                            <div class="header-text-group">
+                                <h2>Y-314</h2>
+                                <span class="neon-bloom-text">PERSIAN GULF V3.0</span>
                             </div>
                         </div>
-                        <button id="login-theme-toggle" class="icon-btn-small" title="Toggle Theme">
-                            <i class="fa-solid fa-sun"></i>
-                        </button>
                     </div>
 
                     <div id="login-view" class="view-section">
-                        
-                        <div class="input-group">
-                            <label><i class="fas fa-id-badge"></i> OPERATOR ID</label>
-                            <input type="text" id="login-id" placeholder="Enter Y-314 ID" class="cyber-input" autocomplete="off">
+                        <div class="input-group spacer-bottom">
+                            <label><i class="fas fa-user-md"></i> IDENTIFICATION</label>
+                            <input type="text" id="login-id" placeholder="Patient or Doctor ID" class="cyber-input" autocomplete="off">
                         </div>
                         
-                        <div class="input-group">
-                            <label><i class="fas fa-key"></i> PASSCODE</label>
+                        <div class="input-group spacer-bottom">
+                            <label><i class="fas fa-fingerprint"></i> SECURE PASSCODE</label>
                             <div class="password-wrapper">
                                 <input type="password" id="login-pass" placeholder="••••••••••••" class="cyber-input">
                                 <button class="toggle-pass" onclick="togglePass('login-pass', this)">
@@ -59,33 +59,32 @@
                         
                         <div class="auth-actions">
                             <button id="btn-login" class="neon-btn primary">
-                                <span class="btn-content">INITIALIZE SESSION</span>
+                                <span class="btn-content">INITIALIZE SEQUENCE</span>
                             </button>
                         </div>
                         
                         <div class="footer-text">
-                            <p>Unregistered Bio-Signature? <button id="go-to-register" class="link-btn">Create New Profile</button></p>
+                            <button id="go-to-register" class="text-link-btn">Create New Bio-Profile</button>
                         </div>
                     </div>
 
                     <div id="register-view" class="view-section hidden">
-                        
                         <div class="reg-header-row">
-                            <button id="btn-back-login" class="back-icon-btn" title="Abort Registration">
+                            <button id="btn-back-login" class="clean-back-btn" title="Return">
                                 <i class="fa-solid fa-arrow-left"></i>
                             </button>
-                            <h3>NEW PROFILE REGISTRATION</h3>
+                            <h3>NEW SUBJECT REGISTRATION</h3>
                         </div>
 
                         <div class="scroll-wrapper custom-scrollbar">
                             
                             <div class="form-block">
-                                <h4>00 // IDENTITY & CREDENTIALS</h4>
-                                <div class="input-stack">
-                                    <input type="text" id="reg-name" placeholder="Full Legal Name" class="cyber-input">
-                                    <input type="text" id="reg-id" placeholder="Assign Operator ID" class="cyber-input">
+                                <h4>00 // IDENTITY & SECURITY</h4>
+                                <div class="input-stack spaced-stack">
+                                    <input type="text" placeholder="Full Legal Name" class="cyber-input">
+                                    <input type="text" placeholder="Assign Operator ID" class="cyber-input">
                                     <div class="password-wrapper">
-                                        <input type="password" id="reg-pass" placeholder="Set Password" class="cyber-input">
+                                        <input type="password" id="reg-pass" placeholder="Set Secure Password" class="cyber-input">
                                         <button class="toggle-pass" onclick="togglePass('reg-pass', this)">
                                             <i class="fa-solid fa-eye"></i>
                                         </button>
@@ -96,98 +95,88 @@
                             <div class="form-block">
                                 <h4>01 // BIOLOGICAL PROFILE</h4>
                                 <div class="gender-selector-container">
-                                    <button class="gender-select-btn male" id="reg-male-btn">
+                                    <button class="gender-select-btn male active" id="reg-male-btn">
                                         <i class="fas fa-mars"></i> MALE
                                     </button>
                                     <button class="gender-select-btn female" id="reg-female-btn">
                                         <i class="fas fa-venus"></i> FEMALE
                                     </button>
-                                    <input type="hidden" id="reg-sex" value=""> 
                                 </div>
-
-                                <div class="grid-3 mt-10">
-                                    <div class="input-wrap">
-                                        <input type="number" id="reg-height" placeholder="Height" class="cyber-input">
-                                        <span class="unit">cm</span>
-                                    </div>
-                                    <div class="input-wrap">
-                                        <input type="number" id="reg-weight" placeholder="Weight" class="cyber-input">
-                                        <span class="unit">kg</span>
-                                    </div>
-                                    <div class="input-wrap">
-                                        <input type="number" id="reg-fat" placeholder="Fat %" class="cyber-input">
-                                        <span class="unit">%</span>
-                                    </div>
+                                <div class="grid-3 mt-15">
+                                    <input type="number" placeholder="Height (cm)" class="cyber-input">
+                                    <input type="number" placeholder="Weight (kg)" class="cyber-input">
+                                    <input type="number" placeholder="Age" class="cyber-input">
                                 </div>
                             </div>
 
                             <div class="form-block">
                                 <h4>02 // CARDIOVASCULAR</h4>
-                                <div class="grid-2">
-                                    <div class="input-wrap">
-                                        <input type="number" id="reg-hr" placeholder="Resting HR" class="cyber-input">
-                                        <span class="unit">BPM</span>
-                                    </div>
-                                    <div class="input-wrap">
-                                        <input type="number" id="reg-spo2" placeholder="SpO2 Level" class="cyber-input">
-                                        <span class="unit">%</span>
-                                    </div>
-                                </div>
-                                <input type="text" id="reg-bp" placeholder="BP (120/80)" class="cyber-input" style="margin-top:10px;">
-                            </div>
-
-                            <div class="form-block">
-                                <h4>03 // RESPIRATORY SYSTEM</h4>
-                                <div class="grid-3">
-                                    <input type="number" id="reg-fvc" placeholder="FVC (L)" class="cyber-input">
-                                    <input type="number" id="reg-pef" placeholder="PEF (L/m)" class="cyber-input">
-                                    <input type="number" id="reg-rr" placeholder="RR (b/m)" class="cyber-input">
+                                <div class="grid-2 spaced-grid">
+                                    <input type="number" placeholder="Resting HR" class="cyber-input">
+                                    <input type="text" placeholder="BP (120/80)" class="cyber-input">
                                 </div>
                             </div>
 
                             <div class="form-block">
-                                <h4>04 // METABOLIC & CHEMICAL</h4>
-                                <div class="grid-3">
-                                    <input type="number" id="reg-temp" placeholder="Temp (°C)" class="cyber-input">
-                                    <input type="number" id="reg-glucose" placeholder="Glucose" class="cyber-input">
-                                    <input type="number" id="reg-hydration" placeholder="Hydration %" class="cyber-input">
+                                <h4>03 // RESPIRATORY</h4>
+                                <input type="number" placeholder="SpO2 Levels %" class="cyber-input">
+                            </div>
+
+                            <div class="form-block">
+                                <h4>04 // METABOLIC</h4>
+                                <div class="grid-2 spaced-grid">
+                                    <input type="number" placeholder="Glucose (mg/dL)" class="cyber-input">
+                                    <input type="number" placeholder="Temp (°C)" class="cyber-input">
                                 </div>
                             </div>
 
                             <div class="form-block">
                                 <h4>05 // DATA IMPORT</h4>
-                                <div class="upload-zone bubbly-zone" id="drop-zone">
-                                    <div class="bubble-icon">
-                                        <i class="fas fa-cloud-upload-alt"></i>
-                                    </div>
-                                    <p class="upload-text">
-                                        <strong>Drag & Drop</strong> Medical Files<br>
-                                        or <span class="highlight">Click to Browse</span>
-                                    </p>
-                                    <input type="file" id="file-upload" class="hidden-input" multiple>
-                                </div>
+                                <label class="upload-zone dashed-border" for="file-upload-input">
+                                    <i class="fas fa-cloud-upload-alt bubble-icon"></i>
+                                    <p>Click to Select Medical Files</p>
+                                    <input type="file" id="file-upload-input" class="hidden-input" multiple>
+                                </label>
                             </div>
-
                         </div> 
                         
                         <div class="action-buttons">
-                            <button id="btn-register" class="neon-btn secondary">CONFIRM ENTRY</button>
+                            <button id="btn-register-confirm" class="neon-btn secondary">CONFIRM ENTRY</button>
                         </div>
                     </div>
-                    
-                    <div id="auth-msg" class="msg-box"></div>
                 </div>
             </div>
 
             <div class="intro-side">
-                <div class="intro-content">
-                    <h1 class="main-title">Y-314</h1>
-                    <h2 class="sub-title">BioTwin <span class="highlight">Core</span></h2>
-                    <div class="divider-line"></div>
-                    <p class="description">
-                        Welcome to the <strong>Y-314 BioTwin Initiative</strong>. 
-                        This platform utilizes high-fidelity 3D rendering and real-time Python data integration.
-                    </p>
+                
+                <div id="cat-canvas-container"></div>
+                
+                <div id="banana-cat-container"></div>
+                
+                <div class="card-swap-wrapper">
+                    <div class="card-stack" id="card-stack">
+                        <div class="info-card fade-stack" onclick="swapCards()">
+                            <div class="card-content">
+                                <h3>PROJECT HISTORY</h3>
+                                <p>Y-314 BioTwin Initiative was established to replace invasive procedures with high-fidelity digital simulation.</p>
+                                <span class="card-badge">01</span>
+                            </div>
+                        </div>
+                        <div class="info-card fade-stack" onclick="swapCards()">
+                            <div class="card-content">
+                                <h3>SYSTEM GUIDE</h3>
+                                <p>Navigate using the left dock. Use the Model Engine to dissect anatomy. Gemini AI is available for real-time analysis.</p>
+                                <span class="card-badge">02</span>
+                            </div>
+                        </div>
+                        <div class="info-card fade-stack" onclick="swapCards()">
+                            <div class="card-content">
+                                <h3>ABOUT</h3>
+                                <p>Powered by Three.js WebGL and advanced Python integration. This is the future of medical diagnostics.</p>
+                                <span class="card-badge">03</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -199,32 +188,41 @@
         
         <div id="loader">
             <div class="spinner"></div>
-            <p>INITIALIZING ASSETS...</p>
+            <p>ASSET GENERATION...</p>
         </div>
 
-        <div class="floating-hud">
-            
+        <div class="floating-hud ultra-glass">
             <div class="hud-left">
                 <span class="hud-brand">Y-314 OS</span>
             </div>
             
             <div class="hud-center">
-                <div class="status-pill">
-                    <span class="dot"></span> ONLINE
-                </div>
-                <div class="user-pill" id="user-display">GUEST</div>
+                <button id="btn-gemini" class="gemini-pill-btn" title="Ask AI Assistant">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> 
+                    <span class="gemini-text">Gemini AI</span>
+                </button>
             </div>
 
-            <div class="hud-right">
-                <button id="app-theme-toggle" class="icon-btn" title="Toggle Theme">
-                    <i class="fa-solid fa-sun"></i>
-                </button>
-                <button class="icon-btn" onclick="openSettings()" title="Settings">
-                    <i class="fa-solid fa-gear"></i>
-                </button>
-                <button id="btn-logout" class="icon-btn alert" title="Logout">
-                    <i class="fa-solid fa-power-off"></i>
-                </button>
+            <div class="hud-right horizontal-group">
+                <button id="app-theme-toggle" class="icon-btn glossy-circle" title="Theme"><i class="fa-solid fa-sun"></i></button>
+                <button id="btn-settings" class="icon-btn glossy-circle" title="Settings"><i class="fa-solid fa-gear"></i></button>
+                <button id="btn-logout" class="icon-btn alert glossy-circle" title="Logout"><i class="fa-solid fa-power-off"></i></button>
+            </div>
+        </div>
+
+        <div id="ai-modal" class="modal-overlay hidden">
+            <div class="settings-card ios-card ai-card">
+                <div class="settings-header">
+                    <h3 class="gemini-header-text"><i class="fa-solid fa-star"></i> GEMINI LIVE</h3>
+                    <button class="icon-btn-small" onclick="closeAI()"><i class="fa-solid fa-times"></i></button>
+                </div>
+                <div class="ai-body custom-scrollbar" id="ai-chat-body">
+                    <div class="ai-msg bot">Hello. I am connected to the Y-314 Bio-Database. Ask me anything.</div>
+                </div>
+                <div class="ai-input-area">
+                    <input type="text" id="ai-input-field" placeholder="Type your query..." class="cyber-input">
+                    <button class="icon-btn send-btn" onclick="sendAIMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+                </div>
             </div>
         </div>
 
@@ -232,128 +230,98 @@
             <div class="settings-card ios-card">
                 <div class="settings-header">
                     <h3>SYSTEM CONFIG</h3>
-                    <button class="close-tiny" onclick="closeSettings()">
-                        <i class="fa-solid fa-times"></i>
-                    </button>
+                    <button class="icon-btn-small" onclick="closeSettings()"><i class="fa-solid fa-times"></i></button>
                 </div>
                 <div class="settings-body">
-                    <div class="settings-row">
-                        <span>High Quality Shaders</span>
-                        <div class="toggle-switch active" id="set-quality"></div>
-                    </div>
-                    <div class="settings-row">
-                        <span>Show Tooltips</span>
-                        <div class="toggle-switch active"></div>
-                    </div>
-                    <div class="settings-row" style="flex-direction:column; align-items:flex-start; gap:10px;">
-                        <span>Rotation Speed</span>
-                        <input type="range" id="set-speed" min="0" max="10" value="5">
+                    <div class="settings-grid">
+                        <div class="setting-box">
+                            <i class="fas fa-eye"></i><span>High Quality</span>
+                            <div class="toggle-switch active" id="set-quality"></div>
+                        </div>
+                        <div class="setting-box">
+                            <i class="fas fa-bolt"></i><span>Performance</span>
+                            <div class="toggle-switch" id="set-perf"></div>
+                        </div>
+                        <div class="setting-box full-width">
+                            <span>Spotlight Color</span>
+                            <input type="color" id="spotlight-color-picker" value="#ff00ff" style="width:100%; border:none; height:35px; cursor:pointer;">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="nav-rail" id="main-nav-rail">
-            
-            <button class="nav-item active ios-card" onclick="switchCategory('home')">
-                <div class="icon-bubble gray"><i class="fa-solid fa-house"></i></div>
-                <span class="label">Overview</span>
+        <div class="nav-rail vertical-dock" id="main-nav-rail">
+            <button class="nav-item glossy-circle active" onclick="switchCategory('home')">
+                <i class="fa-solid fa-house"></i>
             </button>
-
-            <button class="nav-item ios-card" onclick="openSystemPage('genetic', 'Genetics')">
-                <div class="icon-bubble blue"><i class="fa-solid fa-dna"></i></div>
-                <span class="label">Genetic</span>
-                <i class="fa-solid fa-chevron-right arrow"></i>
+            <button class="nav-item glossy-circle" onclick="openSystemPage('genetic', 'Genetic')">
+                <i class="fa-solid fa-dna"></i>
             </button>
-
-            <button class="nav-item ios-card" onclick="openSystemPage('nervous', 'Nervous System')">
-                <div class="icon-bubble pink"><i class="fa-solid fa-brain"></i></div>
-                <span class="label">Nervous</span>
-                <i class="fa-solid fa-chevron-right arrow"></i>
+            <button class="nav-item glossy-circle" onclick="openSystemPage('nervous', 'Nervous')">
+                <i class="fa-solid fa-brain"></i>
             </button>
-
-            <button class="nav-item ios-card" onclick="openSystemPage('circulation', 'Circulation')">
-                <div class="icon-bubble red"><i class="fa-solid fa-heart-pulse"></i></div>
-                <span class="label">Circulation</span>
-                <i class="fa-solid fa-chevron-right arrow"></i>
+            <button class="nav-item glossy-circle" onclick="openSystemPage('circulation', 'Circulation')">
+                <i class="fa-solid fa-heart-pulse"></i>
             </button>
-            
-            <button class="nav-item ios-card" onclick="openSystemPage('skeletal', 'Skeletal')">
-                <div class="icon-bubble white"><i class="fa-solid fa-bone"></i></div>
-                <span class="label">Skeletal</span>
-                <i class="fa-solid fa-chevron-right arrow"></i>
+            <button class="nav-item glossy-circle" onclick="openSystemPage('skeletal', 'Skeletal')">
+                <i class="fa-solid fa-bone"></i>
             </button>
-
-            <button class="nav-item ios-card" onclick="openSystemPage('digestive', 'Digestive')">
-                <div class="icon-bubble orange"><i class="fa-solid fa-hotdog"></i></div>
-                <span class="label">Digestive</span>
-                <i class="fa-solid fa-chevron-right arrow"></i>
+            <button class="nav-item glossy-circle" onclick="openSystemPage('digestive', 'Digestive')">
+                <i class="fa-solid fa-hotdog"></i>
             </button>
-
-            <button class="nav-item ios-card" onclick="openSystemPage('immune', 'Immune')">
-                <div class="icon-bubble cyan"><i class="fa-solid fa-shield-virus"></i></div>
-                <span class="label">Immune</span>
-                <i class="fa-solid fa-chevron-right arrow"></i>
+            <button class="nav-item glossy-circle" onclick="openSystemPage('immune', 'Immune')">
+                <i class="fa-solid fa-shield-virus"></i>
             </button>
         </div>
 
-        <div id="sub-menu-layer" class="hidden">
-            <button class="back-btn ios-card" onclick="closeSystemPage()">
-                <i class="fa-solid fa-arrow-left"></i> Back to Menu
-            </button>
-            
-            <h2 id="sub-menu-title">System Name</h2>
-
-            <div class="sub-grid" id="sub-menu-content">
+        <div id="sub-menu-layer" class="flyout-rail hidden no-border-panel">
+            <div class="flyout-header">
+                <button class="clean-back-btn" onclick="closeSystemPage()"><i class="fa-solid fa-chevron-left"></i></button>
+                <h3 id="flyout-title">SYSTEM</h3>
+            </div>
+            <div class="flyout-grid" id="flyout-content">
                 </div>
         </div>
 
-        <div class="right-dashboard ios-card">
+        <div class="right-dashboard ios-card ultra-glass-clean">
             <div class="dash-header">
                 <h3>SIMULATION DECK</h3>
                 <div class="live-badge">LIVE</div>
             </div>
-            
             <div class="dash-content custom-scrollbar" id="sim-control-panel">
                 </div>
-
             <div class="dash-footer">
-                <div class="slider-group">
-                    <label style="font-size:10px; color:var(--text-dim);">GLOBAL X-RAY OPACITY</label>
-                    <input type="range" id="global-opacity" min="0" max="1" step="0.1" value="1">
-                </div>
+                <label style="font-size:10px; color:var(--text-dim);">X-RAY OPACITY</label>
+                <input type="range" id="global-opacity" min="0" max="1" step="0.1" value="1">
             </div>
         </div>
 
         <div class="manipulator-wrapper">
-            <button id="manipulator-toggle" class="manipulator-btn ios-card" title="Open Controls">
+            <button id="manipulator-toggle" class="registry-circle-btn glossy-circle bubble-anim" title="Open Model Controls">
                 <i class="fa-solid fa-cubes"></i>
             </button>
             
-            <div id="manipulator-panel" class="manipulator-panel ios-card hidden">
+            <div id="manipulator-panel" class="manipulator-panel glass-panel ultra-glass compact-panel hidden">
                 <div class="panel-header-tiny">
-                    <span>MODEL MANIPULATOR</span>
-                    <button class="close-tiny" onclick="toggleManipulator()">
-                        <i class="fa-solid fa-times"></i>
-                    </button>
+                    <span>MODEL ENGINE</span>
                 </div>
-                
-                <div class="manipulator-grid">
-                    <div class="tool-item">
+                <div class="manipulator-grid compact-grid">
+                    <div class="tool-item small">
                         <label>Wireframe</label>
                         <div class="toggle-switch" id="wireframe-toggle"></div>
                     </div>
-                    <div class="tool-item">
-                        <label>Auto-Spin</label>
+                    <div class="tool-item small">
+                        <label>Spin</label>
                         <div class="toggle-switch active" id="spin-toggle"></div>
                     </div>
                     <div class="tool-item full">
-                        <label>Geometry Expansion</label>
-                        <input type="range" id="expansion-slider" min="0" max="1" step="0.01" value="0">
+                        <label>Expansion</label>
+                        <input type="range" id="expansion-slider" min="0.5" max="2" step="0.1" value="1">
                     </div>
                     <div class="tool-item full">
-                        <label>Surface Roughness</label>
-                        <input type="range" id="roughness-slider" min="0" max="1" step="0.1" value="0.2">
+                        <label>Roughness</label>
+                        <input type="range" id="roughness-slider" min="0" max="1" step="0.1" value="0.4">
                     </div>
                 </div>
             </div>
@@ -370,16 +338,15 @@
             </div>
             <div class="divider-vert"></div>
             <div class="control-unit wide">
-                <i class="fa-solid fa-minus small-icon"></i>
-                <input type="range" id="range-zoom" min="2" max="10" step="0.1" value="4.5">
-                <i class="fa-solid fa-plus small-icon"></i>
+                <i class="fa-solid fa-search-minus small-icon"></i>
+                <input type="range" id="range-zoom" min="1" max="12" step="0.05" value="5">
+                <i class="fa-solid fa-search-plus small-icon"></i>
             </div>
             <div class="divider-vert"></div>
-            <button class="icon-btn-dock" onclick="resetCam()">
+            <button class="icon-btn-dock" onclick="resetCam()" title="Reset Camera">
                 <i class="fas fa-compress-arrows-alt"></i>
             </button>
         </div>
-
     </div>
 
     <script type="importmap">
@@ -390,31 +357,50 @@
             }
         }
     </script>
-    
     <script>
+        // UI HELPERS
         function togglePass(id, btn) {
             const input = document.getElementById(id);
             const icon = btn.querySelector('i');
-            if (input.type === "password") {
-                input.type = "text";
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                input.type = "password";
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
+            if (input.type === "password") { input.type = "text"; icon.classList.replace('fa-eye', 'fa-eye-slash'); } 
+            else { input.type = "password"; icon.classList.replace('fa-eye-slash', 'fa-eye'); }
         }
-        
-        function toggleManipulator() {
-            document.getElementById('manipulator-panel').classList.toggle('hidden');
-        }
-        document.getElementById('manipulator-toggle').addEventListener('click', toggleManipulator);
-        
-        function openSettings() { document.getElementById('settings-modal').classList.remove('hidden'); }
+        function openSettings() { document.getElementById('settings-modal').classList.toggle('hidden'); }
         function closeSettings() { document.getElementById('settings-modal').classList.add('hidden'); }
+        function closeAI(){ document.getElementById('ai-modal').classList.add('hidden'); }
+        
+        // CARD SWAP LOGIC (STACK FADE)
+        function swapCards() {
+            const stack = document.querySelector('.card-stack');
+            const cards = document.querySelectorAll('.info-card');
+            // Move first to last, CSS handles transition
+            stack.appendChild(cards[0]); 
+        }
+
+        // MOCK AI SEND FUNCTION
+        function sendAIMessage() {
+            const input = document.getElementById('ai-input-field');
+            const body = document.getElementById('ai-chat-body');
+            const text = input.value.trim();
+            if(!text) return;
+            
+            const uDiv = document.createElement('div');
+            uDiv.className = 'ai-msg user';
+            uDiv.innerText = text;
+            body.appendChild(uDiv);
+            
+            input.value = "";
+            body.scrollTop = body.scrollHeight;
+
+            setTimeout(() => {
+                const bDiv = document.createElement('div');
+                bDiv.className = 'ai-msg bot';
+                bDiv.innerText = "Analyzing '" + text + "'... [Gemini Connection Standby]";
+                body.appendChild(bDiv);
+                body.scrollTop = body.scrollHeight;
+            }, 1000);
+        }
     </script>
-    
     <script type="module" src="js/main.js"></script>
 </body>
 </html>
